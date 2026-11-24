@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>BUILDER · ERRE ERRE FOUNDRY</title>
+  <link rel="stylesheet" href="../assets/css/rr.css">
+  <link rel="stylesheet" href="../assets/css/builder.css">
+</head>
+<body class="bld">
+    <div class="ws" id="ws">
+    <canvas id="cv"></canvas>
+
+    <!-- herramientas -->
+    <div class="tools" id="tools">
+      <button class="m tb" data-tool="draw" title="Pencil · P"></button>
+      <button class="m tb" data-tool="hand" title="Move & select · V"></button>
+      <button class="m tb" data-act="flipH" title="Flip horizontal · Shift+H"></button>
+      <button class="m tb" data-act="flipV" title="Flip vertical · Shift+V"></button>
+      <button class="m tb" data-act="rotL" title="Rotate left · Shift+R"></button>
+      <button class="m tb" data-act="rotR" title="Rotate right · R"></button>
+      <button class="m tb" data-act="save" title="Save progress · Ctrl/Cmd+S"></button>
+      <button class="m tb" data-act="load" title="Load progress · Ctrl/Cmd+O"></button>
+      <div class="dlwrap">
+        <button class="m tb" data-act="download" title="Download font"></button>
+        <div class="dlmenu" id="dlmenu">
+          <button class="m t2" data-exp="otf">OTF</button>
+          <button class="m t2" data-exp="glyphs">GLYPHS</button>
+        </div>
+      </div>
+      <button class="m tb" data-act="clear" title="Delete this glyph"></button>
+    </div>
+
+    <!-- piezas -->
+    <aside class="panel" id="panel">
+      <div class="cats" id="cats"></div>
+      <div class="m sep"></div>
+      <div class="list" id="list"></div>
+    </aside>
+
+    <!-- navegación de glifos -->
+    <div class="gnav" id="gnav">
+      <div class="sets" id="sets"></div>
+      <button class="m cur t2" id="cur"></button>
+      <div class="picker hide" id="picker"></div>
+      <div class="arrows">
+        <button class="m t2" id="prev" aria-label="Previous glyph"><svg viewBox="0 0 16 10" fill="none" stroke="currentColor"><path d="M16 5H1M5 1 1 5l4 4"/></svg></button>
+        <button class="m t2" id="menu" aria-label="All glyphs"><svg viewBox="0 0 17 11" fill="none" stroke="currentColor"><path d="M0 1h17M0 5.5h17M0 10h17"/></svg></button>
+        <button class="m t2" id="next" aria-label="Next glyph"><svg viewBox="0 0 16 10" fill="none" stroke="currentColor"><path d="M0 5h15M11 1l4 4-4 4"/></svg></button>
+      </div>
+    </div>
+
+    <button class="m help t2" id="helpbtn" title="Shortcuts · ?">?</button>
+    <div class="m helpbox t1 hide" id="help"></div>
+  </div>
+
+  <script src="../assets/js/rr-lite.js"></script>
+  <script src="../assets/builder/pieces.js"></script>
+  <script src="../assets/vendor/opentype.min.js"></script>
+  <script src="../assets/js/builder.js"></script>
+  <script src="../assets/js/sound.js"></script>
+</body>
+</html>

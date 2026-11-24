@@ -1,0 +1,10 @@
+ERRE ERRE FOUNDRY · versión para probar en tu ordenador
+
+1. Descomprime esta carpeta (clic derecho > Extraer todo).
+2. Abre index.html con Chrome o Edge (clic derecho > Abrir con).
+3. Ve a PLAYGROUND. La primera vez que pulses 1 o 3 (cámara) o 2 (micrófono)
+   el navegador te pedirá permiso: dale a Permitir. Mientras tengas la página
+   abierta no te lo volverá a pedir.
+
+Aquí la cámara y el micrófono funcionan de verdad y sin retraso,
+porque no pasan por el visor de Claude.

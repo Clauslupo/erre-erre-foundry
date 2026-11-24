@@ -1,0 +1,1864 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ERRE ERRE FOUNDRY · Paso 3 · Tipografía</title>
+<style>
+/* ============ CIMIENTOS (paso 1) ============ */
+@font-face {
+  font-family: "Oswald RR";
+  src: url("fonts/Oswald.ttf") format("truetype");
+  font-weight: 200 700;
+  font-display: block;
+}
+@font-face { font-family: "Kallpa";      src: url("fonts/Kallpa-Bold.otf"); }
+@font-face { font-family: "Interstice";  src: url("fonts/Interstice-Sevra.otf"); }
+@font-face { font-family: "Interstice Thin";    src: url("fonts/Interstice-Thin.otf"); }
+@font-face { font-family: "Interstice Regular"; src: url("fonts/Interstice-Regular.otf"); }
+@font-face { font-family: "Interstice Bold";    src: url("fonts/Interstice-Bold.otf"); }
+@font-face { font-family: "Ranger";      src: url("fonts/Ranger-CondensedBold.otf"); }
+@font-face { font-family: "Cameno";      src: url("fonts/Cameno-ExpandedBold.ttf"); }
+@font-face { font-family: "Keta";        src: url("fonts/Keta.ttf"); }
+@font-face { font-family: "Blockz";      src: url("fonts/Blockz.otf"); }
+@font-face { font-family: "Green Pulse"; src: url("fonts/GreenPulse.otf"); }
+:root {
+  --bl: 10.186px;
+  --margin: var(--bl);
+  --gutter: var(--bl);
+  --ink: #231f20;
+  --paper: #ffffff;
+  --block: #e5e4e4;          /* gris claro: todos los bloques */
+  --block-active: #bdbcbc;   /* gris oscuro: hover, seleccionado, barra */
+  --icon: #aaa8a8;           /* gris del icono de la barra */
+  --chamfer: 6px;
+  --hole: 4px;
+  --ease: cubic-bezier(.2, .8, .2, 1);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--paper); color: var(--ink); }
+body { -webkit-font-smoothing: antialiased; font-family: "Oswald RR", sans-serif; }
+
+.oswald-01, .oswald-02, .oswald-03 {
+  font-weight: 400; letter-spacing: -0.025em; margin: 0;
+  position: relative; top: calc(0.358 * var(--fs) - var(--lh) / 2);
+  font-size: var(--fs); line-height: var(--lh);
+}
+.oswald-01 { --fs: 12.573px; --lh: calc(var(--bl) * 2); }
+.oswald-02 { --fs: 25.147px; --lh: calc(var(--bl) * 3); }
+.oswald-03 { --fs: 50.285px; --lh: calc(var(--bl) * 5); }
+
+/* Etiqueta de botón en OSWALD 02: la mayúscula mide 2 líneas base
+   y se centra en el bloque (como el centrado vertical de InDesign). */
+.label {
+  --fs: 25.147px; --lh: calc(var(--bl) * 2);
+  font-size: var(--fs); line-height: var(--lh); height: var(--lh);
+  letter-spacing: -0.025em; white-space: nowrap;
+  position: relative; top: calc(0.358 * var(--fs) - var(--lh) / 2);
+}
+
+.block {
+  --dot: radial-gradient(circle, var(--ink) calc(var(--hole)/2 - .3px), transparent calc(var(--hole)/2 + .3px));
+  background:
+    radial-gradient(circle at var(--chamfer) var(--chamfer), var(--ink) calc(var(--hole)/2 - .3px), transparent calc(var(--hole)/2 + .3px)),
+    radial-gradient(circle at calc(100% - var(--chamfer)) var(--chamfer), var(--ink) calc(var(--hole)/2 - .3px), transparent calc(var(--hole)/2 + .3px)),
+    radial-gradient(circle at var(--chamfer) calc(100% - var(--chamfer)), var(--ink) calc(var(--hole)/2 - .3px), transparent calc(var(--hole)/2 + .3px)),
+    radial-gradient(circle at calc(100% - var(--chamfer)) calc(100% - var(--chamfer)), var(--ink) calc(var(--hole)/2 - .3px), transparent calc(var(--hole)/2 + .3px)),
+    var(--fill, var(--block));
+  clip-path: polygon(var(--chamfer) 0, calc(100% - var(--chamfer)) 0, 100% var(--chamfer), 100% calc(100% - var(--chamfer)), calc(100% - var(--chamfer)) 100%, var(--chamfer) 100%, 0 calc(100% - var(--chamfer)), 0 var(--chamfer));
+}
+
+/* ============ PASO 2 · MENÚ ============ */
+.site { padding: var(--margin) var(--margin) 0; }
+
+/* Zona plegable: su altura es siempre un múltiplo de la línea base. */
+.menu-area {
+  height: var(--area, 0px);
+  overflow: hidden;
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+
+
+/* Logo: entra por detrás de los botones cuando bajas del todo. */
+.logo-wrap {
+  flex: none; height: var(--logo-visible, 0px); overflow: hidden;
+  display: flex; align-items: flex-end;
+}
+.logo-wrap a { display: block; width: 100%; }
+.logo { display: block; width: 100%; height: var(--logo-h); flex: none; color: var(--ink); }
+.logo-gap { flex: none; height: var(--logo-gap, 0px); }
+
+/* Botones: 6 en 12 columnas (2 col cada uno). Tablet 3, móvil 2. */
+.buttons {
+  flex: none;
+  display: grid;
+  grid-template-columns: repeat(var(--per-row), minmax(0, 1fr));
+  column-gap: var(--gutter);
+  row-gap: var(--bl);
+  padding-bottom: var(--bl);           /* 1 línea hasta la barra */
+  --per-row: 6;
+}
+@media (max-width: 900px) { .buttons { --per-row: 3; } }
+@media (max-width: 560px) { .buttons { --per-row: 2; } }
+
+.btn {
+  height: var(--btn-h, calc(var(--bl) * 5));
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink); text-decoration: none;
+  border: 0; padding: 0; font: inherit; cursor: pointer;
+}
+.btn:hover, .btn:focus-visible { --fill: var(--block-active); outline: none; }
+.btn.is-active { --fill: var(--block-active); }
+.has-active .btn:not(.is-active) .label { color: var(--block-active); }
+.has-active .btn:not(.is-active):hover .label { color: var(--ink); }
+
+/* Barra para arrastrar: 12 col × 3 líneas */
+.bar {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; height: calc(var(--bl) * 3);
+  border: 0; padding: 0; cursor: grab; touch-action: none;
+  user-select: none; -webkit-user-select: none;
+}
+.bar:hover, .bar:focus-visible, body.dragging .bar { --fill: var(--block-active); outline: none; }
+body.dragging, body.dragging * { cursor: grabbing !important; }
+.burger { width: 20px; display: grid; gap: 4.6px; }
+.burger i { display: block; height: 1.4px; border-radius: 1px; background: var(--icon); }
+.bar:hover .burger i, body.dragging .burger i { background: var(--ink); }
+
+/* Catálogo: tarjetas 4 col × 47 líneas con la muestra de cada tipografía
+   (texto alineado abajo y centrado, como en InDesign) */
+.content {
+  display: grid; grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gutter); row-gap: var(--bl);
+  padding: var(--bl) 0 var(--bl);
+}
+.card {
+  grid-column: span 4; height: var(--card-h, calc(var(--bl) * 47));
+  display: flex; align-items: flex-end; justify-content: center;
+  container-type: inline-size; overflow: hidden;
+  color: var(--ink); text-decoration: none;
+}
+.card:hover { --fill: var(--block-active); }
+/* tamaño del InDesign; si la tarjeta es más estrecha que 490 px, se reduce en proporción */
+.specimen { --shift: 0px; transform: translateY(var(--shift)); line-height: normal; white-space: nowrap; font-size: calc(var(--s) / 4.904 * 1cqw); }
+
+/* Pie: R R F © (2 col × 25 líneas) + 4 enlaces (2 col × 12) */
+.footer {
+  display: grid; grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-auto-rows: var(--bl); column-gap: var(--gutter); row-gap: 0;
+  padding-bottom: var(--bl);
+}
+/* La letra grande: Oswald Bold, mayúscula de 21 líneas, 2 líneas arriba y 2 abajo */
+.footer .big { grid-column: span 2; grid-row: 1 / span 25; display: flex; align-items: flex-start; justify-content: center; padding-top: calc(var(--bl) * 2); overflow: hidden; }
+.footer .big span {
+  font-weight: 700;
+  --lh: calc(var(--bl) * 21); --fs: calc(var(--lh) / 0.81);
+  font-size: var(--fs); line-height: var(--lh); height: var(--lh);
+  letter-spacing: -0.025em; position: relative; top: calc(0.358 * var(--fs) - var(--lh) / 2);
+}
+.footer .link { grid-column: span 2; display: flex; align-items: center; justify-content: center; color: var(--ink); text-decoration: none; }
+.footer .link:hover { --fill: var(--block-active); }
+.footer .l1, .footer .l2 { grid-row: 1 / span 12; }
+.footer .l3, .footer .l4 { grid-row: 14 / span 12; }
+@media (max-width: 900px) {
+  .footer .big { grid-column: span 3; }
+  .footer .link { grid-column: span 6; }
+  .footer .l1, .footer .l2 { grid-row: 27 / span 12; }
+  .footer .l3, .footer .l4 { grid-row: 40 / span 12; }
+}
+@media (max-width: 900px) { .card { grid-column: span 6; } }
+@media (max-width: 560px) { .card { grid-column: span 12; } }
+
+/* Caritas: en cada cruce de medianiles entre bloques; giran con el scroll */
+.body-wrap { position: relative; }
+.smiley {
+  position: absolute; width: 16.1px; height: 16.1px; margin: -8.05px 0 0 -8.05px;
+  z-index: 5; pointer-events: none;
+  transform: rotate(var(--spin, 0deg)); transform-origin: 50% 50%; will-change: transform;
+  line-height: 0;
+}
+.smiley svg { display: block; width: 100%; height: 100%; }
+
+/* ============ PASO 3 · PÁGINA DE TIPOGRAFÍA ============ */
+.view-type { display: none; }
+body.is-type .view-type { display: block; }
+body.is-type #bodyWrap { display: none; }
+/* dentro de una tipografía la barra va en gris oscuro (tu 30 %) */
+body.is-type .bar { --fill: var(--block-active); }
+body.is-type .bar .burger i { background: var(--ink); }
+
+/* Marco principal: ocupa todo lo que queda de pantalla, con margen en todos los lados */
+.hero {
+  margin-top: var(--bl);
+  height: max(calc(var(--bl) * 30), calc(100svh - var(--header-h, 0px) - var(--bl) * 2));
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+}
+.hero-name { white-space: nowrap; line-height: 1; font-size: var(--hero-fs, 300px); animation: fade-in .45s .1s both; }
+@keyframes fade-in { from { opacity: 0; transform: translateY(var(--bl)); } to { opacity: 1; transform: none; } }
+
+/* Barra separadora de sección (3 líneas, gris oscuro, rótulo pequeño) */
+.section-bar {
+  --fill: var(--block-active);
+  height: calc(var(--bl) * 3); margin-top: var(--bl);
+  display: flex; align-items: center; justify-content: center;
+}
+.soon { height: calc(var(--bl) * 23); margin: var(--bl) 0; display: flex; align-items: center; justify-content: center; color: var(--block-active); }
+
+/* Rótulo de barra en OSWALD 01 (mayúscula de 1 línea, centrada) */
+.label-01 {
+  --fs: 12.573px; --lh: var(--bl);
+  font-size: var(--fs); line-height: var(--lh); height: var(--lh); white-space: nowrap;
+  letter-spacing: -0.025em; position: relative; top: calc(0.358 * var(--fs) - var(--lh) / 2);
+}
+/* Texto corrido en OSWALD 02 / 03 (líneas sobre la línea base) */
+.t02, .t03 { letter-spacing: -0.025em; position: relative; top: calc(0.358 * var(--fs) - var(--lh) / 2); font-size: var(--fs); line-height: var(--lh); margin: 0; }
+.t02 { --fs: 25.147px; --lh: calc(var(--bl) * 3); }
+.t03 { --fs: 50.285px; --lh: calc(var(--bl) * 5); }
+.t02 a, .t03 a { color: inherit; text-decoration: none; }
+.t02 a:hover, .t03 a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+.arrow { font-family: system-ui, sans-serif; font-weight: 300; font-size: .8em; }
+
+/* Bloque blanco (con tornillos), como tus cajas en Papel */
+.white { --fill: var(--paper); }
+
+/* INFO: nombre, autor, escuela (12 col × 23 líneas) */
+.info {
+  margin-top: var(--bl); height: calc(var(--bl) * 23);
+  display: grid; grid-template-rows: repeat(23, var(--bl)); justify-items: center; text-align: center;
+}
+.info .i-name   { grid-row: 4 / span 4; }
+.info .i-credit { grid-row: 11 / span 6; }
+.info .i-school { grid-row: 19 / span 2; }
+
+/* Botones de características: se ensanchan al pasar por encima */
+.features {
+  margin-top: var(--bl); height: calc(var(--bl) * 11);
+  display: flex; align-items: center; justify-content: center; gap: var(--gutter);
+  container-type: inline-size; padding: 0 var(--bl);
+}
+.feat {
+  --col: calc((100cqw - var(--bl) * 2 - 11 * var(--gutter)) / 12);
+  --half: calc((var(--col) - var(--gutter)) / 2);
+  --fill: var(--block);
+  position: relative; flex: none; height: calc(var(--bl) * 5);
+  width: var(--w-now, var(--half));
+  display: grid; grid-template-columns: minmax(0, 1fr); place-items: center; overflow: hidden;
+  transition: width .35s var(--ease);
+  cursor: default;
+}
+.feat.wide1 { --w-now: var(--col); }
+.feat .label { grid-area: 1 / 1; transition: opacity .2s; }
+.feat .long { opacity: 0; }
+.feat:hover, .feat:focus-visible { --fill: var(--block-active); outline: none; }
+
+/* GALERÍA: foto 6 col × 41 líneas + texto 6 col × 23 líneas; si hay más de dos, se desliza */
+.gallery {
+  margin-top: var(--bl);
+  display: flex; gap: var(--gutter); overflow-x: auto; scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.gallery::-webkit-scrollbar { display: none; }
+.g-item { flex: none; width: calc((100% - var(--gutter)) / 2); scroll-snap-align: start; display: grid; row-gap: var(--bl); min-width: 0; }
+.g-img {
+  height: calc(var(--bl) * 41); overflow: hidden; background: var(--ink);
+  clip-path: polygon(var(--chamfer) 0, calc(100% - var(--chamfer)) 0, 100% var(--chamfer), 100% calc(100% - var(--chamfer)), calc(100% - var(--chamfer)) 100%, var(--chamfer) 100%, 0 calc(100% - var(--chamfer)), 0 var(--chamfer));
+}
+.g-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.g-text { height: calc(var(--bl) * 23); display: flex; align-items: center; justify-content: center; text-align: center; padding: 0 calc(var(--bl) * 2); }
+@media (max-width: 760px) { .g-item { width: 100%; } .g-text { height: auto; min-height: calc(var(--bl) * 23); padding: calc(var(--bl) * 2) calc(var(--bl) * 2); } }
+@media (max-width: 760px) { .t03 { --fs: 37.7px; } }
+
+/* PROBADOR: área 12 col × 47 líneas + fila de controles de 5 líneas */
+.tester-area {
+  margin-top: var(--bl); height: calc(var(--bl) * 47);
+  display: flex; align-items: center; overflow: hidden; padding: 0 calc(var(--bl) * 3);
+}
+.tester-text {
+  width: 100%; outline: none; white-space: pre-wrap; overflow-wrap: anywhere;
+  max-height: 100%; overflow: hidden; caret-color: var(--ink);
+}
+.controls {
+  margin-top: var(--bl);
+  display: grid; grid-template-columns: repeat(24, minmax(0, 1fr)); column-gap: var(--gutter);
+  height: calc(var(--bl) * 5);
+}
+.ctl { height: calc(var(--bl) * 5); display: flex; align-items: center; justify-content: center; gap: var(--bl); border: 0; padding: 0 calc(var(--bl) * 1.5); font: inherit; color: var(--ink); cursor: pointer; min-width: 0; user-select: none; -webkit-user-select: none; }
+.ctl:hover, .ctl.on { --fill: var(--block-active); }
+.ctl .val { color: var(--block-active); font-variant-numeric: tabular-nums; }
+.ctl:hover .val, .ctl.scrub .val { color: var(--ink); }
+.ctl.dim .label { color: var(--block-active); }
+.ctl.dim:hover .label, .ctl.dim.on .label { color: var(--ink); }
+.c-weight { grid-column: 1 / span 4; position: relative; }
+.c-size   { grid-column: 5 / span 6; justify-content: space-between; cursor: default; }
+.c-lead   { grid-column: 11 / span 2; cursor: ew-resize; justify-content: flex-start; }
+.c-track  { grid-column: 13 / span 2; cursor: ew-resize; justify-content: flex-start; }
+.c-abc    { grid-column: 16; } .c-num { grid-column: 17; } .c-sym { grid-column: 18; } .c-acc { grid-column: 19; } .c-enye { grid-column: 20; }
+.c-left   { grid-column: 22; } .c-center { grid-column: 23; } .c-right { grid-column: 24; }
+.c-abc, .c-num, .c-sym, .c-acc, .c-enye, .c-left, .c-center, .c-right { padding: 0; }
+.lead-ico { text-decoration: overline underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+/* deslizador con tirador octogonal */
+.slider { position: relative; flex: 1; height: calc(var(--bl) * 2); cursor: pointer; touch-action: none; }
+.slider::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--block-active); }
+.knob { position: absolute; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; background: var(--ink);
+  clip-path: polygon(30% 0, 70% 0, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0 70%, 0 30%); }
+.align-ico { width: 22px; display: flex; flex-direction: column; gap: 3.5px; }
+.align-ico i { display: block; height: 1px; background: var(--block-active); }
+.ctl.on .align-ico i, .ctl:hover .align-ico i { background: var(--ink); }
+/* desplegable de pesos (se abre hacia arriba) */
+.controls { position: relative; }
+.w-menu { position: absolute; left: 0; width: var(--w-menu-w, 200px); bottom: calc(100% + var(--bl)); display: none; flex-direction: column-reverse; gap: var(--bl); z-index: 30; }
+.controls.open .w-menu { display: flex; }
+.controls.open .c-weight { --fill: var(--block-active); }
+.w-opt { height: calc(var(--bl) * 5); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.w-opt:hover, .w-opt.cur { --fill: var(--block-active); }
+@media (max-width: 900px) {
+  .controls { height: auto; row-gap: var(--bl); grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  .c-weight { grid-column: 1 / span 4; } .c-size { grid-column: 5 / span 8; }
+  .c-lead { grid-column: 1 / span 3; } .c-track { grid-column: 4 / span 3; }
+  .c-abc { grid-column: 7; } .c-num { grid-column: 8; } .c-sym { grid-column: 9; } .c-acc { grid-column: 10; } .c-enye { grid-column: 11; }
+  .c-left { grid-column: 1 / span 2; } .c-center { grid-column: 3 / span 2; } .c-right { grid-column: 5 / span 2; }
+}
+
+/* GLIFOS: izquierda, rejilla con su propio scroll; derecha, glifo grande + pestaña de peso.
+   Ocupa todo el alto de la pantalla, con margen. */
+.glyphs {
+  margin-top: var(--bl);
+  height: max(calc(var(--bl) * 50), calc(100svh - var(--bl) * 6));
+  display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter);
+}
+.g-list {
+  grid-column: 1 / span 6; overflow-y: auto; overscroll-behavior: auto; scrollbar-width: none;
+  display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-auto-rows: calc(var(--bl) * 11);
+  gap: var(--bl) var(--gutter); align-content: start;
+}
+.g-list::-webkit-scrollbar { display: none; }
+.g-cell { display: flex; align-items: center; justify-content: center; color: var(--block-active); font-size: 60px; line-height: 1; white-space: nowrap; overflow: hidden; cursor: default; transition: color .12s; }
+.g-cell.cur { color: var(--ink); }
+.g-side { grid-column: 7 / span 6; display: flex; flex-direction: column; gap: var(--bl); min-height: 0; position: relative; }
+.g-big { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; container-type: size; }
+.g-big span { font-size: min(500px, 60cqh, 70cqw); line-height: 1; white-space: nowrap; }
+.g-tab { height: calc(var(--bl) * 5); width: calc((100% - 5 * var(--gutter)) / 3 + var(--gutter)); margin-left: auto; margin-right: auto; display: flex; align-items: center; justify-content: center; gap: var(--bl); border: 0; font: inherit; color: var(--ink); cursor: pointer; }
+.g-tab:hover, .g-side.open .g-tab { --fill: var(--block-active); }
+.g-side .w-menu { left: 50%; transform: translateX(-50%); bottom: calc(var(--bl) * 6); }
+.g-side.open .w-menu { display: flex; }
+@media (max-width: 760px) {
+  .glyphs { grid-template-rows: 45% 1fr; row-gap: var(--bl); height: calc(100svh - var(--bl) * 6); }
+  .g-side { grid-column: 1 / -1; grid-row: 1; }
+  .g-list { grid-column: 1 / -1; grid-row: 2; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+/* DESCARGA: ficha (blanca) + botón DOWNLOAD (6 col × 23 cada uno) */
+.dl { margin-top: var(--bl); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); }
+.dl-info { grid-column: 1 / span 6; height: calc(var(--bl) * 23); display: grid; grid-template-rows: repeat(23, var(--bl)); padding: 0 calc(var(--bl) * 2); }
+.dl-info .d-name { grid-row: 4 / span 4; }
+.dl-info .d-credit { grid-row: 13 / span 6; }
+.dl-btn { grid-column: 7 / span 6; height: calc(var(--bl) * 23); display: flex; align-items: center; justify-content: center; color: var(--ink); text-decoration: none; }
+.dl-btn:hover { --fill: var(--block-active); }
+.dl-btn .t03 { height: calc(var(--bl) * 4); --lh: calc(var(--bl) * 4); }
+.links { margin-top: var(--bl); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); }
+.links a { height: calc(var(--bl) * 11); display: flex; align-items: center; justify-content: center; color: var(--ink); text-decoration: none; }
+.links a:hover, .links .lic:hover + .lic-arrow, .links .lic-arrow:hover { --fill: var(--block-active); }
+.links .l-ig, .links .l-web, .links .l-con { grid-column: span 2; }
+.links .lic { grid-column: span 5; }
+.links .lic-arrow { grid-column: span 1; }
+@media (max-width: 760px) {
+  .dl-info, .dl-btn { grid-column: 1 / -1; } .dl-btn { margin-top: var(--bl); }
+  .links { row-gap: var(--bl); } .links .l-ig, .links .l-web, .links .l-con { grid-column: span 4; } .links .lic { grid-column: span 9; } .links .lic-arrow { grid-column: span 3; }
+}
+.related { margin-top: var(--bl); padding: 0; }
+.view-type .footer { margin-top: var(--bl); }
+
+/* Tarjeta que crece al abrir una tipografía */
+.zoom {
+  position: fixed; z-index: 40; pointer-events: none;
+  transition: left .5s var(--ease), top .5s var(--ease), width .5s var(--ease), height .5s var(--ease);
+}
+.zoom .specimen { transition: opacity .25s; }
+
+/* Indicador del estado mientras arrastras */
+.state-tag {
+  position: fixed; left: 50%; bottom: calc(var(--bl) * 2); transform: translateX(-50%);
+  background: var(--ink); color: var(--paper); padding: 0 calc(var(--bl) * 1.5);
+  height: calc(var(--bl) * 3); display: flex; align-items: center; z-index: 60;
+  clip-path: polygon(var(--chamfer) 0, calc(100% - var(--chamfer)) 0, 100% var(--chamfer), 100% calc(100% - var(--chamfer)), calc(100% - var(--chamfer)) 100%, var(--chamfer) 100%, 0 calc(100% - var(--chamfer)), 0 var(--chamfer));
+  opacity: 0; transition: opacity .2s; pointer-events: none;
+}
+body.dragging .state-tag, body.peek .state-tag { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) { .menu-area { transition: none; } }
+/* ============ PASO 3b · TU FONT.HTML DENTRO DE LA WEB (prefijo fp-) ============ */
+#fontRest { container-type: inline-size; --col: calc((100cqw - 11 * var(--gutter)) / 12); }
+.fp-info { margin-top: var(--bl); height: calc(var(--bl) * 23); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.fp-info .fp-name, .fp-who .fp-name { margin-bottom: var(--bl); }
+.fp-info a, .fp-who a { color: inherit; text-decoration: none; }
+.fp-cred { margin-top: var(--bl); }
+.fp-arrow { width: .62em; height: .62em; vertical-align: .05em; }
+.fp-feats { margin-top: var(--bl); height: calc(var(--bl) * 11); display: flex; align-items: center; justify-content: center; }
+.fp-row { display: flex; gap: var(--gutter); justify-content: center; flex-wrap: wrap; }
+/* botones: al pasar por encima se ensanchan y muestran qué significan (como tu font.html) */
+.fp-f { --fill: var(--block); height: calc(var(--bl) * 5); flex: none; display: grid; grid-template-columns: minmax(0, 1fr); place-items: center; cursor: default; white-space: nowrap; overflow: hidden;
+  transition: width .45s cubic-bezier(.65, 0, .25, 1); }
+.fp-f .label { grid-area: 1 / 1; transition: opacity .25s; }
+.fp-f .l { opacity: 0; }
+.fp-f:hover .s { opacity: 0; }
+.fp-f:hover .l { opacity: 1; transition-delay: .12s; }
+.fp-w b { font-weight: 700; } .fp-w i { font-style: normal; font-weight: 200; }
+.fp-gallery { margin-top: var(--bl); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--bl) var(--gutter); }
+.fp-gallery > * { grid-column: span var(--span); }
+.fp-ph { height: calc(var(--bl) * 41); overflow: hidden; background: var(--block); }
+.fp-ph img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.fp-tx { height: calc(var(--bl) * 23); padding: calc(var(--bl) * 2) calc(var(--bl) * 3); overflow: hidden; }
+/* la tipografía nunca se corta: salta de línea, deja sitio a ascendentes y descendentes
+   y, si el texto no cabe en las 47 líneas, el bloque crece de línea base en línea base */
+.fp-tester .tester-area { height: auto; min-height: calc(var(--bl) * 47); overflow: visible; padding: calc(var(--bl) * 3); }
+.fp-tester .tester-text { max-height: none; overflow: visible; padding: .4em 0; overflow-wrap: anywhere; word-break: break-word; }
+.fp-tester .tester-text:empty::before { content: 'Type here…'; color: var(--block-active); }
+.fp-sel { position: relative; }
+.fp-sel select { position: absolute; inset: 0; opacity: 0; width: 100%; cursor: pointer; font: inherit; }
+.fp-down { width: 11px; height: 13px; flex: none; }
+.c-size { gap: calc(var(--bl) * 1.5); }
+.c-lead, .c-track { gap: calc(var(--bl) * 1.2); }
+.ctl .k { cursor: ew-resize; touch-action: none; }
+.fp-num { width: 3.4ch; border: 0; background: none; padding: 0; font: inherit; font-size: 25.147px; letter-spacing: -0.025em; color: var(--block-active); text-align: right; outline: none; -moz-appearance: textfield; appearance: textfield; }
+.fp-num::-webkit-inner-spin-button, .fp-num::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.fp-num:focus, .ctl:hover .fp-num { color: var(--ink); }
+.fp-rng { -webkit-appearance: none; appearance: none; flex: 1; min-width: 40px; height: 20px; background: transparent; cursor: pointer; margin: 0; }
+.fp-rng::-webkit-slider-runnable-track { height: 1px; background: var(--ink); }
+.fp-rng::-moz-range-track { height: 1px; background: var(--ink); }
+.fp-rng::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; margin-top: -8px; background: var(--ink); border: 0; clip-path: polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%); }
+.fp-rng::-moz-range-thumb { width: 16px; height: 16px; background: var(--ink); border: 0; border-radius: 0; clip-path: polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%); }
+.ctl[disabled] { opacity: .45; pointer-events: none; }
+.al svg { width: 17px; height: 14px; color: var(--block-active); }
+.al:hover svg, .al.on svg { color: var(--ink); }
+.fp-glyphs { margin-top: var(--bl); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); align-items: start; }
+.fp-cells { grid-column: span 6; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--bl) var(--gutter); }
+.fp-cell { height: calc(var(--bl) * 11); display: flex; align-items: center; justify-content: center; color: var(--block-active); font-size: min(58px, 4.5vw); line-height: 1; overflow: hidden; white-space: nowrap; cursor: default; transition: color .12s; }
+.fp-cell.act { color: var(--ink); }
+.fp-side { grid-column: span 6; position: sticky; top: var(--bl); height: calc(100svh - var(--bl) * 2); display: flex; flex-direction: column; gap: var(--bl); }
+.fp-big { --fill: var(--paper); flex: 1; min-height: 0; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; container-type: size; }
+.fp-big .gl { font-size: min(62cqh, 70cqw); line-height: 1; white-space: nowrap; }
+.fp-big .code { position: absolute; left: calc(var(--bl) * 2); bottom: calc(var(--bl) * 1.5); color: var(--block-active); top: auto; }
+.fp-side .ctl { flex: none; }
+.fp-dl { margin-top: var(--bl); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--bl) var(--gutter); }
+.fp-who { grid-column: span 6; height: calc(var(--bl) * 23); display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 0 calc(var(--bl) * 2); }
+.fp-btn { grid-column: span 6; height: calc(var(--bl) * 23); border: 0; font: inherit; color: var(--ink); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.fp-btn:hover, .fp-btn.busy { --fill: var(--block-active); }
+.fp-lk { height: calc(var(--bl) * 11); display: flex; align-items: center; justify-content: center; color: var(--ink); text-decoration: none; }
+.fp-lk:hover { --fill: var(--block-active); }
+.fp-lk.off { color: var(--block-active); pointer-events: none; }
+.fp-lk.s1 { grid-column: span 1; } .fp-lk.s6 { grid-column: span 6; } .fp-lk.s2 { grid-column: span 2; } .fp-lk.s5 { grid-column: span 5; }
+.fp-lk .fp-arrow { width: 22px; height: 22px; }
+.fp-toast { position: fixed; left: 50%; bottom: var(--bl); transform: translate(-50%, 200%); height: calc(var(--bl) * 5); padding: 0 calc(var(--bl) * 3); display: flex; align-items: center; z-index: 200; transition: transform .3s; }
+.fp-toast.on { transform: translate(-50%, 0); }
+@media (max-width: 700px) {
+  .fp-gallery > *, .fp-cells, .fp-side, .fp-who, .fp-btn { grid-column: 1 / -1; }
+  .fp-side { order: -1; top: 0; height: 46svh; z-index: 5; background: var(--paper); }
+  .fp-lk.s2 { grid-column: span 4; } .fp-lk.s5 { grid-column: span 10; } .fp-lk.s1 { grid-column: span 2; }
+  .fp-tx { height: auto; min-height: calc(var(--bl) * 23); }
+}
+/* Al subir con el scroll aparece la barra de las tres rayitas */
+.mini-bar { position: fixed; left: 0; right: 0; top: 0; z-index: 50; padding: var(--bl) var(--margin) var(--bl); background: var(--paper);
+  transform: translateY(-110%); transition: transform .3s cubic-bezier(.65, 0, .25, 1); }
+.mini-bar.on { transform: none; }
+.mini-bar .bar { cursor: pointer; }
+/* al pulsarla se despliegan las secciones ahí mismo, encima del contenido */
+.mini-menu { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .3s cubic-bezier(.65, 0, .25, 1); }
+.mini-menu > .buttons { min-height: 0; overflow: hidden; padding-bottom: 0; }
+.mini-bar.open .mini-menu { grid-template-rows: 1fr; }
+.mini-bar.open .mini-menu > .buttons { padding-bottom: var(--bl); }
+.mini-bar .btn { height: calc(var(--bl) * 5); }
+
+/* ============ PASO 5 · BUILDER (tus páginas 8–12) ============ */
+.view-bld { display: none; }
+body.is-bld { overflow: hidden; }
+body.is-bld .view-bld { display: block; height: calc(100svh - var(--header-h, 0px) - var(--bl)); }
+body.is-bld #bodyWrap { display: none; }
+#bldFrame { display: block; width: 100%; height: 100%; border: 0; }
+
+/* ============ PASO 6 · PLAYGROUND ============ */
+.view-pg { display: none; }
+body.is-pg { overflow: hidden; }
+body.is-pg .view-pg { display: block; height: calc(100svh - var(--header-h, 0px) - var(--bl)); padding: 0 var(--bl); }
+body.is-pg #bodyWrap { display: none; }
+.pg-stage { position: relative; height: 100%; overflow: hidden; }
+.pg-text { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -55%); white-space: nowrap; line-height: 1.25; outline: none; color: var(--ink); caret-color: var(--block-active); padding: 0 .1em; }
+.pg-text.hide { visibility: hidden; }
+.pg-letters { position: absolute; inset: 0; pointer-events: none; }
+.pg-letters { width: 100%; height: 100%; display: none; }
+.pg-stage.cam .pg-letters { display: block; }
+#pgVideo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); filter: grayscale(1) contrast(1.1); opacity: 0; transition: opacity .6s; pointer-events: none; }
+.pg-stage.cam #pgVideo.live { opacity: .14; }
+.pg-tools { position: absolute; left: 0; right: 0; bottom: calc(var(--bl) * 2); display: flex; gap: var(--gutter); justify-content: center; flex-wrap: wrap; padding: 0 var(--bl); z-index: 2; }
+.pg-tools .ctl { --fill: var(--block); flex: none; min-width: calc(var(--bl) * 5.5); }
+.pg-tools .ctl:hover, .pg-tools .ctl.on { --fill: var(--block-active); }
+.pg-shot-wrap { position: relative; display: flex; }
+.pg-shot-menu { position: absolute; left: 50%; bottom: calc(100% + var(--bl)); transform: translateX(-50%); display: none; flex-direction: column; gap: var(--bl); }
+.pg-shot-wrap.open .pg-shot-menu { display: flex; }
+.pg-shot-menu .ctl { min-width: calc(var(--bl) * 9); }
+.pg-shot-menu .ctl.rec .label { color: #c00; }
+.pg-sel { padding: 0 calc(var(--bl) * 2); }
+.pg-cam svg { width: 22px; height: 16px; }
+.pg-tools .ctl[aria-disabled="true"] { display: none; }
+
+/* ============ PASO 4 · RESOURCES (tu página 7) ============ */
+.view-res { display: none; padding-top: var(--bl); }
+body.is-res .view-res { display: block; }
+body.is-res #bodyWrap { display: none; }
+.art { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--bl) var(--gutter); margin-bottom: var(--bl); color: var(--ink); text-decoration: none; align-items: start; }
+.art-ph { grid-column: span 6; height: calc(var(--bl) * 41); overflow: hidden; background: var(--block); }
+.art-ph img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .8s cubic-bezier(.65, 0, .25, 1); }
+.art:hover .art-ph img { transform: scale(1.03); }
+.art-side { grid-column: span 6; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--bl) var(--gutter); }
+.art-side > * { grid-column: span var(--c); display: flex; align-items: center; justify-content: center; text-align: center; }
+.art-meta { height: calc(var(--bl) * 5); }
+.art-who { height: calc(var(--bl) * 11); }
+.art-ttl { height: calc(var(--bl) * 23); padding: 0 calc(var(--bl) * 4); text-transform: uppercase; }
+.art-go { height: calc(var(--bl) * 23); }
+.art-go svg { width: 22px; height: 22px; transition: transform .35s cubic-bezier(.65, 0, .25, 1); }
+.art-go:hover { --fill: var(--block-active); }
+.art-go:hover svg { transform: translate(4px, -4px); }
+@media (max-width: 700px) {
+  .art-ph, .art-side { grid-column: 1 / -1; }
+  .art .art-ph { order: -1; }
+  .art-ttl { padding: 0 var(--bl); }
+}
+</style>
+</head>
+<body>
+
+<div class="site">
+  <header>
+    <div class="menu-area" id="area">
+      <div class="logo-wrap"><a href="#" aria-label="ERRE ERRE FOUNDRY, inicio">
+        <svg class="logo" viewBox="0 0 1491.628 163.1" preserveAspectRatio="xMidYMax meet" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M71.683 160.697L71.683 136.998L35.058 136.998L35.058 89.601L62.674 89.601L62.674 65.315L35.058 65.315L35.058 25.948L71.292 25.948L71.292 2.053L0.000 2.053L0.000 160.697L71.683 160.697ZM112.811 160.697L112.811 89.601L122.800 89.601L140.231 160.697L176.465 160.697L154.725 83.921C159.945 81.442 163.960 78.339 166.770 74.618C169.576 70.897 171.501 66.490 172.547 61.398C173.591 56.305 174.114 50.497 174.114 43.966C174.114 32.870 171.926 24.283 167.553 18.211C163.177 12.140 157.075 7.929 149.241 5.579C141.406 3.228 132.134 2.053 121.429 2.053L77.753 2.053L77.753 160.697L112.811 160.697ZM112.811 25.556L124.171 25.556C130.830 25.556 135.399 27.450 137.881 31.236C140.360 35.024 141.602 40.312 141.602 47.100C141.602 51.801 141.045 55.816 139.937 59.145C138.827 62.475 136.902 65.021 134.160 66.784C131.418 68.546 127.565 69.428 122.604 69.428L112.811 69.428L112.811 25.556ZM220.530 160.697L220.530 89.601L230.519 89.601L247.950 160.697L284.184 160.697L262.444 83.921C267.664 81.442 271.679 78.339 274.489 74.618C277.295 70.897 279.220 66.490 280.266 61.398C281.310 56.305 281.833 50.497 281.833 43.966C281.833 32.870 279.645 24.283 275.272 18.211C270.896 12.140 264.794 7.929 256.960 5.579C249.125 3.228 239.853 2.053 229.148 2.053L185.472 2.053L185.472 160.697L220.530 160.697ZM220.530 25.556L231.890 25.556C238.549 25.556 243.118 27.450 245.600 31.236C248.079 35.024 249.321 40.312 249.321 47.100C249.321 51.801 248.764 55.816 247.656 59.145C246.546 62.475 244.621 65.021 241.879 66.784C239.137 68.546 235.284 69.428 230.323 69.428L220.530 69.428L220.530 25.556ZM360.957 160.697L360.957 136.998L324.332 136.998L324.332 89.601L351.948 89.601L351.948 65.315L324.332 65.315L324.332 25.948L360.566 25.948L360.566 2.053L289.274 2.053L289.274 160.697L360.957 160.697ZM479.056 160.697L479.056 136.998L442.431 136.998L442.431 89.601L470.047 89.601L470.047 65.315L442.431 65.315L442.431 25.948L478.664 25.948L478.664 2.053L407.373 2.053L407.373 160.697L479.056 160.697ZM520.184 160.697L520.184 89.601L530.173 89.601L547.604 160.697L583.837 160.697L562.097 83.921C567.318 81.442 571.333 78.339 574.142 74.618C576.949 70.897 578.873 66.490 579.920 61.398C580.964 56.305 581.487 50.497 581.487 43.966C581.487 32.870 579.299 24.283 574.926 18.211C570.550 12.140 564.447 7.929 556.613 5.579C548.779 3.228 539.506 2.053 528.802 2.053L485.126 2.053L485.126 160.697L520.184 160.697ZM520.184 25.556L531.544 25.556C538.203 25.556 542.772 27.450 545.254 31.236C547.732 35.024 548.975 40.312 548.975 47.100C548.975 51.801 548.418 55.816 547.310 59.145C546.199 62.475 544.274 65.021 541.532 66.784C538.790 68.546 534.937 69.428 529.977 69.428L520.184 69.428L520.184 25.556ZM627.903 160.697L627.903 89.601L637.892 89.601L655.323 160.697L691.556 160.697L669.816 83.921C675.037 81.442 679.052 78.339 681.861 74.618C684.668 70.897 686.592 66.490 687.639 61.398C688.683 56.305 689.206 50.497 689.206 43.966C689.206 32.870 687.018 24.283 682.645 18.211C678.269 12.140 672.166 7.929 664.332 5.579C656.498 3.228 647.225 2.053 636.521 2.053L592.845 2.053L592.845 160.697L627.903 160.697ZM627.903 25.556L639.263 25.556C645.922 25.556 650.491 27.450 652.973 31.236C655.451 35.024 656.694 40.312 656.694 47.100C656.694 51.801 656.137 55.816 655.029 59.145C653.918 62.475 651.993 65.021 649.251 66.784C646.509 68.546 642.656 69.428 637.696 69.428L627.903 69.428L627.903 25.556ZM768.330 160.697L768.330 136.998L731.705 136.998L731.705 89.601L759.321 89.601L759.321 65.315L731.705 65.315L731.705 25.948L767.938 25.948L767.938 2.053L696.647 2.053L696.647 160.697L768.330 160.697ZM849.804 160.697L849.804 90.188L878.986 90.188L878.986 65.706L849.804 65.706L849.804 25.752L883.295 25.752L883.295 2.053L814.745 2.053L814.745 160.697L849.804 160.697ZM963.888 156.780C970.871 152.602 975.866 146.595 978.871 138.761C981.873 130.926 983.375 121.593 983.375 110.753L983.375 51.801C983.375 40.833 981.873 31.499 978.871 23.793C975.866 16.091 970.871 10.181 963.888 6.068C956.901 1.955 947.402 -0.101 935.391 -0.101C923.508 -0.101 914.107 1.955 907.187 6.068C900.265 10.181 895.304 16.091 892.302 23.793C889.297 31.499 887.798 40.833 887.798 51.801L887.798 110.753C887.798 121.593 889.297 130.926 892.302 138.761C895.304 146.595 900.265 152.602 907.187 156.780C914.107 160.957 923.508 163.047 935.391 163.047C947.402 163.047 956.901 160.957 963.888 156.780ZM927.459 135.431C925.824 133.604 924.781 131.254 924.325 128.380C923.866 125.510 923.639 122.572 923.639 119.567L923.639 43.183C923.639 40.049 923.899 37.081 924.423 34.271C924.943 31.465 926.054 29.149 927.752 27.319C929.448 25.492 931.994 24.577 935.391 24.577C939.045 24.577 941.722 25.492 943.421 27.319C945.116 29.149 946.227 31.465 946.750 34.271C947.271 37.081 947.534 40.049 947.534 43.183L947.534 119.567C947.534 122.572 947.271 125.510 946.750 128.380C946.227 131.254 945.116 133.604 943.421 135.431C941.722 137.261 939.045 138.173 935.391 138.173C931.734 138.173 929.090 137.261 927.459 135.431ZM1069.160 157.073C1075.948 153.092 1080.746 147.280 1083.556 139.642C1086.362 132.004 1087.766 122.636 1087.766 111.537L1087.766 2.053L1052.904 2.053L1052.904 116.825C1052.904 120.090 1052.675 123.355 1052.218 126.618C1051.760 129.883 1050.682 132.561 1048.987 134.648C1047.288 136.738 1044.546 137.781 1040.761 137.781C1037.104 137.781 1034.396 136.738 1032.633 134.648C1030.870 132.561 1029.726 129.883 1029.205 126.618C1028.682 123.355 1028.422 120.090 1028.422 116.825L1028.422 2.053L993.755 2.053L993.755 111.537C993.755 122.636 995.126 132.004 997.868 139.642C1000.610 147.280 1005.409 153.092 1012.264 157.073C1019.119 161.055 1028.618 163.047 1040.761 163.047C1052.904 163.047 1062.369 161.055 1069.160 157.073ZM1130.267 160.697L1130.267 78.437L1162.779 160.697L1186.477 160.697L1186.477 2.053L1157.491 2.053L1157.491 78.437L1124.979 2.053L1100.301 2.053L1100.301 160.697L1130.267 160.697ZM1240.923 160.697C1254.633 160.697 1265.307 158.934 1272.946 155.409C1280.584 151.883 1285.970 146.369 1289.104 138.859C1292.238 131.352 1293.805 121.657 1293.805 109.774L1293.805 52.192C1293.805 40.441 1292.238 30.878 1289.104 23.499C1285.970 16.124 1280.550 10.704 1272.848 7.243C1265.142 3.785 1254.370 2.053 1240.532 2.053L1200.381 2.053L1200.381 160.697L1240.923 160.697ZM1235.439 26.535L1240.727 26.535C1245.948 26.535 1249.737 27.190 1252.087 28.494C1254.437 29.800 1255.971 31.891 1256.690 34.761C1257.406 37.635 1257.767 41.420 1257.767 46.121L1257.767 115.258C1257.767 119.959 1257.473 123.876 1256.886 127.009C1256.298 130.143 1254.829 132.493 1252.479 134.060C1250.129 135.627 1246.276 136.410 1240.923 136.410L1235.439 136.410L1235.439 26.535ZM1340.418 160.697L1340.418 89.601L1350.407 89.601L1367.838 160.697L1404.071 160.697L1382.331 83.921C1387.552 81.442 1391.567 78.339 1394.376 74.618C1397.183 70.897 1399.107 66.490 1400.154 61.398C1401.198 56.305 1401.721 50.497 1401.721 43.966C1401.721 32.870 1399.533 24.283 1395.160 18.211C1390.784 12.140 1384.681 7.929 1376.847 5.579C1369.013 3.228 1359.740 2.053 1349.036 2.053L1305.360 2.053L1305.360 160.697L1340.418 160.697ZM1340.418 25.556L1351.778 25.556C1358.437 25.556 1363.006 27.450 1365.487 31.236C1367.966 35.024 1369.209 40.312 1369.209 47.100C1369.209 51.801 1368.652 55.816 1367.544 59.145C1366.433 62.475 1364.508 65.021 1361.766 66.784C1359.024 68.546 1355.171 69.428 1350.211 69.428L1340.418 69.428L1340.418 25.556ZM1462.240 160.697L1462.240 95.868L1491.814 2.053L1460.085 2.053L1446.571 52.192L1431.490 2.053L1398.391 2.053L1428.552 95.868L1428.552 160.697L1462.240 160.697Z"/></svg>
+      </a></div>
+      <div class="logo-gap"></div>
+      <nav class="buttons has-active" id="buttons" aria-label="Menú principal">
+        <a class="btn block is-active" href="#catalogue"><span class="label">CATALOGUE</span></a>
+        <a class="btn block" href="#resources"><span class="label">RESOURCES</span></a>
+        <a class="btn block" href="#playground"><span class="label">PLAYGROUND</span></a>
+        <a class="btn block" href="#builder"><span class="label">BUILDER</span></a>
+        <a class="btn block" href="mailto:hello@gonzalomunoz.work?subject=Typeface%20submission%20%C2%B7%20ERRE%20ERRE%20FOUNDRY" target="_blank" rel="noopener"><span class="label">SUBMIT</span></a>
+        <a class="btn block" href="#about"><span class="label">ABOUT</span></a>
+      </nav>
+    </div>
+    <button class="bar block" id="bar" aria-label="Arrastra para desplegar o plegar el menú" aria-controls="area">
+      <span class="burger" aria-hidden="true"><i></i><i></i><i></i></span>
+    </button>
+  </header>
+
+  <section class="view-type" id="typeView" aria-live="polite">
+    <div class="hero block"><span class="hero-name" id="heroName"></span></div>
+    <div id="fontRest"></div>
+    <div class="body-wrap" id="typeEnd">
+      <div class="content related" id="related"></div>
+      <div id="typeFooter"></div>
+    </div>
+  </section>
+
+  <div class="mini-bar" id="miniBar" aria-hidden="true">
+    <div class="mini-menu"><nav class="buttons" id="miniButtons" aria-label="Menú"></nav></div>
+    <button class="bar block" tabindex="-1" aria-label="Volver arriba al menú"><span class="burger" aria-hidden="true"><i></i><i></i><i></i></span></button>
+  </div>
+
+  <section class="view-pg" id="pgView">
+    <div class="pg-stage block white" id="pgStage">
+      <video id="pgVideo" playsinline muted></video>
+      <div class="pg-text" id="pgText" contenteditable="true" spellcheck="false" aria-label="Your text"></div>
+      <canvas class="pg-letters" id="pgLetters" aria-hidden="true"></canvas>
+      <div class="pg-tools">
+        <label class="ctl block pg-sel fp-sel"><span class="label">Typography</span><svg class="fp-down" viewBox="0 0 11 13" fill="none" stroke="currentColor" stroke-width="1"><path d="M5.5 0v12M1 7.5l4.5 4.5L10 7.5"/></svg><select id="pgFont" aria-label="Typography"></select></label>
+        <button class="ctl block" id="pgSpring" aria-label="1 · Camera"><span class="label">1</span></button>
+        <button class="ctl block pg-mic" id="pgMic" aria-label="2 · Microphone"><span class="label">2</span></button>
+        <button class="ctl block pg-cam" id="pgCam" aria-label="3 · Camera, letters bounce"><span class="label">3</span></button>
+        <button class="ctl block" id="pgWave" aria-label="4 · Waves"><span class="label">4</span></button>
+        <span class="pg-shot-wrap"><button class="ctl block" id="pgShot" aria-label="5 · Capture"><span class="label">5</span></button>
+          <span class="pg-shot-menu" id="pgShotMenu">
+            <button class="ctl block" data-shot="photo"><span class="label">PHOTO</span></button>
+            <button class="ctl block" data-shot="gif"><span class="label">GIF</span></button>
+            <button class="ctl block" data-shot="video"><span class="label">VIDEO</span></button>
+          </span></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="view-bld" id="bldView"><iframe id="bldFrame" title="Builder"></iframe></section>
+
+  <section class="view-res body-wrap" id="resView">
+    <div id="articles"></div>
+    <div id="resFooter"></div>
+  </section>
+
+  <div class="body-wrap" id="bodyWrap">
+  <main class="content" id="content"></main>
+
+  <footer class="footer">
+    <div class="big block"><span>R</span></div>
+    <div class="big block"><span>R</span></div>
+    <div class="big block"><span>F</span></div>
+    <div class="big block copy"><span>©</span></div>
+    <a class="link block l1" href="https://instagram.com/gonzalomunoz.work" target="_blank" rel="noopener"><span class="label">INSTAGRAM</span></a>
+    <a class="link block l2" href="https://openfontlicense.org" target="_blank" rel="noopener"><span class="label">LICENCES</span></a>
+    <a class="link block l3" href="https://instagram.com/gonzalomunoz.work" target="_blank" rel="noopener"><span class="label">PRIVACY</span></a>
+    <a class="link block l4" href="https://instagram.com/gonzalomunoz.work" target="_blank" rel="noopener"><span class="label">CREDITS</span></a>
+  </footer>
+  </div>
+</div>
+
+<div class="state-tag"><span class="label" id="stateName"></span></div>
+
+<script>
+(() => {
+  const BL = 10.186;
+  const LOGO_RATIO = 163.1 / 1491.628;
+  let MAX_BTN = 23;                    // alto máximo de un botón, en líneas (5 dentro de una tipografía)
+  const STEPS = [5, 11, 23];           // alturas del sistema (2·n + 1)
+
+  const body = document.body;
+  const area = document.getElementById('area');
+  const bar = document.getElementById('bar');
+  const buttons = document.getElementById('buttons');
+  const stateName = document.getElementById('stateName');
+  const root = document.documentElement;
+
+  // Catálogo: mismo orden, texto y tamaño (pt = px) que tu página 3
+  // ---------- Tipografías (más adelante: una carpeta por tipografía) ----------
+  // Página de cada tipografía: datos reales de content/fonts/<carpeta>/info.js
+  const TYPEFACES = {
+    'nano':        { family: 'Kallpa' },
+    'interstice':  { family: 'Interstice' },
+    'ranger':      { family: 'Ranger' },
+    'cameno':      { family: 'Cameno' },
+    'keta':        { family: 'Keta' },
+    'blockz':      { family: 'Blockz' },
+    'green-pulse': { family: 'Green Pulse' },
+  };
+  // Tipografías guardadas pero ocultas: sus archivos y datos siguen en content/fonts/.
+  // Para volver a mostrar una, quítala de esta lista.
+  const HIDDEN = ['green-pulse'];
+  for (const k of HIDDEN) delete TYPEFACES[k];
+  const CATALOGUE = ['interstice', 'nano', 'blockz', 'cameno', 'keta', 'ranger', 'green-pulse'].filter(k => !HIDDEN.includes(k));
+  const idOf = family => Object.keys(TYPEFACES).find(k => TYPEFACES[k].family === family);
+
+  // [familia, texto, tamaño]
+  // una tarjeta por tipografía, sin repetir
+  const FONTS = [
+    ['Kallpa', 'Aa', 400], ['Interstice', 'aa', 300], ['Ranger', 'Aa', 300],
+    ['Cameno', 'Aa', 317], ['Keta', 'aa', 398], ['Blockz', 'AA', 272],
+    ['Green Pulse', 'AA', 300],
+  ].filter(([family]) => idOf(family));
+  const content = document.getElementById('content');
+  FONTS.forEach(([family, text, size]) => {
+    const c = document.createElement('a');
+    c.className = 'card block'; c.href = '#' + idOf(family); c.dataset.id = idOf(family);
+    c.setAttribute('aria-label', family);
+    const s = document.createElement('span');
+    s.className = 'specimen'; s.textContent = text;
+    s.style.fontFamily = `"${family}"`; s.style.setProperty('--s', size);
+    c.appendChild(s); content.appendChild(c);
+  });
+
+  // ---------- Misma línea base en todas las tarjetas ----------
+  // No se toca ninguna fuente: se mide dónde cae la línea base de cada una
+  // (con una marca invisible apoyada en ella) y cuánto baja el dibujo de las
+  // letras por debajo de esa línea (hay fuentes que lo traen desplazado).
+  // Luego se mueve el texto entero para que el pie de todas las letras
+  // apoye a 4 líneas del borde inferior de la tarjeta.
+  const BASE_FROM_BOTTOM = 4;
+  // dibuja el texto en un lienzo oculto y busca el último píxel con tinta
+  const cnv = document.createElement('canvas'), ctx = cnv.getContext('2d', { willReadFrequently: true });
+  function inkBelowBaseline(sp) {
+    const cs = getComputedStyle(sp), fs = parseFloat(cs.fontSize), text = sp.firstChild.textContent;
+    const W = Math.ceil(fs * text.length * 1.6), H = Math.ceil(fs * 2), base = Math.round(fs * 1.2);
+    cnv.width = W; cnv.height = H;
+    ctx.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+    ctx.textBaseline = 'alphabetic'; ctx.fillStyle = '#000';
+    ctx.fillText(text, fs * .2, base);
+    const px = ctx.getImageData(0, 0, W, H).data;
+    for (let y = H - 1; y > 0; y--) {
+      for (let x = 0; x < W; x++) if (px[(y * W + x) * 4 + 3] > 128) return Math.max(0, y + 1 - base);
+    }
+    return 0;
+  }
+  // tarjetas siempre cuadradas: el alto sigue al ancho, en líneas base enteras (mínimo 47)
+  function sizeCards() {
+    const c = [...document.querySelectorAll('.card')].find(x => x.offsetParent && !x.classList.contains('zoom'));
+    if (!c) return;
+    document.documentElement.style.setProperty('--card-h', Math.max(47, Math.round(c.getBoundingClientRect().width / BL)) * BL + 'px');
+  }
+  function alignBaselines() {
+    sizeCards();
+    document.querySelectorAll('.card .specimen').forEach(sp => {
+      if (!sp.offsetParent) return;
+      sp.style.setProperty('--shift', '0px');
+      let probe = sp.querySelector('.probe');
+      if (!probe) { probe = document.createElement('i'); probe.className = 'probe'; probe.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline'; sp.appendChild(probe); }
+      const baseline = probe.getBoundingClientRect().top;
+      const target = sp.parentElement.getBoundingClientRect().bottom - BASE_FROM_BOTTOM * BL - inkBelowBaseline(sp);
+      sp.style.setProperty('--shift', (target - baseline) + 'px');
+    });
+  }
+
+  // ---------- Medidas que dependen del ancho ----------
+  let rows = 1, logoLines = 16, states = [];
+  const perRow = () => parseInt(getComputedStyle(buttons).getPropertyValue('--per-row')) || 6;
+
+  function measure() {
+    rows = Math.ceil(6 / perRow());
+    const w = buttons.getBoundingClientRect().width;
+    // el logo ocupa todo el ancho y su caja se redondea a líneas enteras
+    logoLines = Math.max(3, Math.round((w * LOGO_RATIO) / BL));
+    root.style.setProperty('--logo-h', (w * LOGO_RATIO) + 'px');
+    // estados, en líneas: oculto · compacto · medio · grande · con logo
+    const btnBlock = h => rows * (h + 1);
+    // dentro de una tipografía (tu página 4): oculto · compacto · logo + botones pequeños
+    if (['is-type', 'is-res', 'is-bld', 'is-pg'].some(c => body.classList.contains(c))) {
+      MAX_BTN = 5;
+      states = [
+        { name: 'OCULTO',   lines: 0 },
+        { name: 'COMPACTO', lines: btnBlock(5) },
+        { name: 'CON LOGO', lines: btnBlock(5) + logoLines + 1 },
+      ];
+      return;
+    }
+    MAX_BTN = 23;
+    states = [
+      { name: 'OCULTO',   lines: 0 },
+      { name: 'COMPACTO', lines: btnBlock(5) },
+      { name: 'MEDIO',    lines: btnBlock(11) },
+      { name: 'GRANDE',   lines: btnBlock(23) },
+      { name: 'CON LOGO', lines: btnBlock(23) + logoLines + 1 },
+    ];
+  }
+
+  // ---------- Pinta el menú para una altura dada (en líneas) ----------
+  let shown = 0;                          // altura que se ve ahora mismo (en líneas)
+  function render(lines) {
+    shown = lines;
+    const maxBtnZone = rows * (MAX_BTN + 1);
+    const btnZone = Math.min(lines, maxBtnZone);
+    // alto de cada botón: continuo mientras se mueve; en reposo cae en líneas enteras
+    let h = btnZone / rows - 1;
+    h = Math.max(1, Math.min(MAX_BTN, h));
+    const logoZone = Math.max(0, lines - maxBtnZone);           // lo que sobra es para el logo
+    const logoGap = Math.min(1, logoZone);
+    root.style.setProperty('--btn-h', (h * BL) + 'px');
+    root.style.setProperty('--logo-visible', (Math.max(0, logoZone - logoGap) * BL) + 'px');
+    root.style.setProperty('--logo-gap', (logoGap * BL) + 'px');
+    area.style.setProperty('--area', (lines * BL) + 'px');
+    root.style.setProperty('--header-h', ((lines + 3) * BL) + 'px');
+    area.setAttribute('aria-hidden', lines === 0 ? 'true' : 'false');
+    buttons.querySelectorAll('a').forEach(a => a.tabIndex = lines === 0 ? -1 : 0);
+  }
+
+  let current = 4;                       // empieza CON LOGO (la animación de entrada va en el paso 3)
+  // Todas las transiciones se animan con la misma curva suave
+  const ease = t => t < .5 ? 16 * t ** 5 : 1 - Math.pow(-2 * t + 2, 5) / 2;
+  let anim = null;
+  function animateTo(to, ms, done) {
+    cancelAnimationFrame(anim);
+    const from = shown, t0 = performance.now();
+    if (ms <= 0 || from === to || matchMedia('(prefers-reduced-motion: reduce)').matches) { render(to); done && done(); return; }
+    const step = now => {
+      const t = Math.min(1, (now - t0) / ms);
+      render(from + (to - from) * ease(t));
+      if (t < 1) anim = requestAnimationFrame(step); else { anim = null; done && done(); }
+    };
+    anim = requestAnimationFrame(step);
+  }
+  function go(i, ms = 325) {
+    current = Math.max(0, Math.min(states.length - 1, i));
+    stateName.textContent = states[current].name;
+    animateTo(states[current].lines, ms);
+  }
+  const nearest = lines => states.reduce((best, s, i) =>
+    Math.abs(s.lines - lines) < Math.abs(states[best].lines - lines) ? i : best, 0);
+
+  // ---------- Arrastrar la barra ----------
+  let drag = null;
+  // ---------- Intro: se ve con logo y a los 2 s se pliega ----------
+  const INTRO_WAIT = 1000, INTRO_DURATION = 800, INTRO_TARGET = 1;   // 1 = COMPACTO (tu página 3)
+  let introTimer = null;
+  function cancelIntro() { clearTimeout(introTimer); introTimer = null; }
+  function playIntro() { introTimer = setTimeout(() => go(INTRO_TARGET, INTRO_DURATION), INTRO_WAIT); }
+  // si tocas la barra antes de tiempo, la intro se cancela y mandas tú
+  bar.addEventListener('pointerdown', cancelIntro, true);
+  bar.addEventListener('keydown', cancelIntro, true);
+
+  bar.addEventListener('pointerdown', e => {
+    bar.setPointerCapture(e.pointerId);
+    cancelAnimationFrame(anim);
+    drag = { y: e.clientY, start: shown, lines: shown, moved: false };
+  });
+  bar.addEventListener('pointermove', e => {
+    if (!drag) return;
+    const dy = e.clientY - drag.y;
+    if (!drag.moved && Math.abs(dy) < 4) return;
+    drag.moved = true;
+    body.classList.add('dragging');
+    const max = states[states.length - 1].lines;
+    drag.lines = Math.max(0, Math.min(max, drag.start + dy / BL));
+    render(drag.lines);
+    stateName.textContent = states[nearest(drag.lines)].name;
+  });
+  const end = () => {
+    if (!drag) return;
+    if (drag.moved) go(nearest(drag.lines));
+    else go(current === 0 ? 1 : 0);      // un clic: pliega / despliega
+    body.classList.remove('dragging');
+    drag = null;
+  };
+  bar.addEventListener('pointerup', end);
+  bar.addEventListener('pointercancel', end);
+  // teclado: flechas para subir/bajar de estado, Intro para plegar/desplegar
+  bar.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); go(current + 1); peek(); }
+    if (e.key === 'ArrowUp')   { e.preventDefault(); go(current - 1); peek(); }
+  });
+  bar.addEventListener('click', e => { if (e.detail === 0) go(current === 0 ? 1 : 0); }); // Intro/espacio
+  let peekT;
+  function peek() { body.classList.add('peek'); clearTimeout(peekT); peekT = setTimeout(() => body.classList.remove('peek'), 900); }
+
+  // ---------- Botón activo (sección en la que estás) ----------
+  buttons.addEventListener('click', e => {
+    const a = e.target.closest('a'); if (!a) return;
+    if (a.getAttribute('href').startsWith('mailto:')) return;   // SUBMIT: abre el correo
+    e.preventDefault();
+    if (a.getAttribute('href') === '#sound') { if (window.RRSound) RRSound.toggle(); return; }   // no es una sección
+    if (a.getAttribute('href') === '#catalogue') { location.hash = ''; return; }
+    if (a.getAttribute('href') === '#resources') { location.hash = 'resources'; return; }
+    if (a.getAttribute('href') === '#builder') { location.hash = 'builder'; return; }
+    if (a.getAttribute('href') === '#playground') { location.hash = 'playground'; return; }
+    const was = a.classList.contains('is-active');
+    buttons.querySelectorAll('a').forEach(b => b.classList.remove('is-active'));
+    if (!was) a.classList.add('is-active');
+    buttons.classList.toggle('has-active', !was);
+  });
+
+  // ---------- Caritas ----------
+  const wrap = document.getElementById('bodyWrap');
+  const SMILEY = '<svg viewBox="-8.05 -8.05 16.1 16.1" width="16.1" height="16.1"><circle r="8.05" fill="#ffd700"/><circle cx="-2.7" cy="-1.8" r="1.25" fill="#231f20"/><circle cx="2.6" cy="-1.8" r="1.25" fill="#231f20"/><path d="M-5.603 1.829C-5.607 1.729 -5.611 1.629 -5.615 1.528C-5.729 1.783 -5.289 1.707 -5.208 1.703C-5.096 1.857 -5.014 2.027 -4.964 2.212C-4.705 2.446 -4.399 2.151 -4.148 2.456C-4.114 2.586 -4.081 2.715 -4.047 2.845C-4.030 3.182 -3.856 3.400 -3.524 3.499C-3.276 3.659 -2.801 3.834 -2.580 4.042C-2.526 4.190 -2.457 4.331 -2.373 4.464C-2.076 4.649 -1.228 4.476 -0.892 4.475C0.120 4.474 1.147 4.535 2.156 4.465C2.352 4.076 2.240 4.002 2.769 3.939C3.483 3.855 3.030 3.923 3.420 3.513C3.508 3.469 3.597 3.425 3.685 3.381C3.798 3.273 3.880 3.145 3.931 2.995C4.129 2.759 4.546 2.272 4.887 2.299C4.864 2.120 4.848 1.939 4.835 1.759C5.069 1.623 5.260 1.415 5.414 1.192C5.404 1.228 5.394 1.264 5.385 1.300" fill="none" stroke="#231f20" stroke-width="0.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  function placeSmileys() {
+    placeSmileysIn(wrap);
+    const te = document.getElementById('typeEnd');
+    if (te) placeSmileysIn(te);
+    placeSmileysIn(document.getElementById('resView'), '.art-ph, .art-go', '.art-ph, .art-blk, .footer .block');
+  }
+  function placeSmileysIn(wrap, cardSel = '.card', blockSel = '.card, .footer .block') {
+    wrap.querySelectorAll('.smiley').forEach(n => n.remove());
+    if (!wrap.offsetParent) return;
+    const base = wrap.getBoundingClientRect();
+    const blocks = [...wrap.querySelectorAll(blockSel)].map(b => b.getBoundingClientRect());
+    const cards = [...wrap.querySelectorAll(cardSel)].map(b => b.getBoundingClientRect());
+    const seen = new Set();
+    // un cruce existe donde una tarjeta tiene otro bloque a su derecha y otro debajo
+    cards.forEach(r => {
+      const x = r.right + BL / 2, y = r.bottom + BL / 2;
+      const right = blocks.some(o => Math.abs(o.left - r.right - BL) < 2 && o.top <= r.bottom && o.bottom >= r.top);
+      const below = blocks.some(o => Math.abs(o.top - r.bottom - BL) < 2 && o.left <= r.right && o.right >= r.left);
+      if (!right || !below) return;
+      const key = Math.round(x) + ',' + Math.round(y);
+      if (seen.has(key)) return; seen.add(key);
+      const d = document.createElement('div');
+      d.className = 'smiley'; d.innerHTML = SMILEY;
+      d.style.left = (x - base.left) + 'px'; d.style.top = (y - base.top) + 'px';
+      wrap.appendChild(d);
+    });
+  }
+  // barra de las tres rayitas: aparece al hacer scroll hacia arriba (cuando el menú ya no se ve)
+  const miniBar = document.getElementById('miniBar');
+  let lastY = scrollY;
+  const miniButtons = document.getElementById('miniButtons');
+  function syncMini() {
+    miniButtons.innerHTML = buttons.innerHTML;
+    miniButtons.classList.toggle('has-active', buttons.classList.contains('has-active'));
+  }
+  miniButtons.addEventListener('click', e => {
+    const a = e.target.closest('a'); if (!a) return;
+    if (a.getAttribute('href').startsWith('mailto:')) { miniBar.classList.remove('open', 'on'); return; }
+    e.preventDefault();
+    if (a.getAttribute('href') === '#sound') { if (window.RRSound) RRSound.toggle(); return; }
+    miniBar.classList.remove('open', 'on');
+    buttons.querySelector(`a[href="${a.getAttribute('href')}"]`).click();
+  });
+  addEventListener('scroll', () => {
+    if (miniBar.classList.contains('open')) { miniBar.classList.remove('open'); lastY = scrollY; return; }
+    const y = scrollY, hb = bar.getBoundingClientRect().bottom;
+    const show = y < lastY - 2 && hb < 0 && !body.classList.contains('is-bld') && !body.classList.contains('is-pg');
+    if (y > lastY + 2 || hb >= 0) miniBar.classList.remove('on'); else if (show) miniBar.classList.add('on');
+    lastY = y;
+  }, { passive: true });
+  miniBar.querySelector('.bar').addEventListener('click', () => {
+    if (!miniBar.classList.contains('open')) syncMini();
+    miniBar.classList.toggle('open');
+  });
+  // giro: una vuelta completa cada ~600 px de scroll
+  let ticking = false;
+  addEventListener('scroll', () => {
+    if (ticking) return; ticking = true;
+    requestAnimationFrame(() => { root.style.setProperty('--spin', (scrollY * 0.6) + 'deg'); ticking = false; });
+  }, { passive: true });
+
+
+  // ---------- Arranque y cambios de tamaño ----------
+  measure(); go(current, 0);
+
+  // ---------- Navegación: home ⇄ página de tipografía ----------
+  const heroName = document.getElementById('heroName');
+  const hero = document.querySelector('.hero');
+  function fitHero() {
+    if (!heroName.textContent) return;
+    heroName.style.setProperty('--hero-fs', '100px');
+    const k = Math.min((hero.clientWidth * 0.66) / heroName.scrollWidth, (hero.clientHeight * 0.42) / 100);
+    heroName.style.setProperty('--hero-fs', (100 * k) + 'px');
+  }
+  // ════════════════ PÁGINA DE TIPOGRAFÍA (igual que tu font.html) ════════════════
+  // Datos: content/fonts/<carpeta>/info.js · fuentes, fotos y licencia en esa carpeta.
+  const DATA = {};
+  const fontDir = slug => 'content/fonts/' + slug + '/';
+  window.RR = window.RR || {};
+  window.RR.font = o => { o.slug = o.slug || window.RR._slug; DATA[o.slug] = o; };
+  const loadScript = src => new Promise(res => { const sc = document.createElement('script'); sc.src = src; sc.onload = () => res(true); sc.onerror = () => res(false); document.head.appendChild(sc); });
+  let dataReady = null;
+  function loadData() {
+    if (!dataReady) dataReady = (async () => {
+      for (const slug of CATALOGUE) { window.RR._slug = slug; await loadScript(fontDir(slug) + 'info.js'); }
+      window.RR._slug = null;
+    })();
+    return dataReady;
+  }
+  const faces = {};
+  const famOf = (slug, i) => 'RR-' + slug + '-' + i;
+  function loadFace(f, i) {
+    const name = famOf(f.slug, i);
+    if (!faces[name]) faces[name] = (async () => {
+      const url = fontDir(f.slug) + 'fonts/' + encodeURI(f.weights[i].file);
+      try { const ff = new FontFace(name, `url("${url}")`); document.fonts.add(ff); await ff.load(); }
+      catch (e) { const st = document.createElement('style'); st.textContent = `@font-face{font-family:"${name}";src:url("${url}")}`; document.head.appendChild(st); try { await document.fonts.load(`40px "${name}"`); } catch (_) {} }
+      return name;
+    })();
+    return faces[name];
+  }
+  const defW = f => Math.max(0, f.weights.findIndex(w => w.default));
+  // Glifos reales de cada archivo (leídos del cmap; los glifos vacíos no se cuentan)
+  const GLYPHSETS = {"blockz": {"Blockz-Regular.otf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "lower": "", "numbers": "", "symbols": "", "accents": "ÁÉÍÑÓÚ", "other": ""}}, "cameno": {"Cameno-Bold.ttf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZÆØŒ", "lower": "abcdefghijklmnopqrstuvwxyzæøœ", "numbers": "0123456789", "symbols": "!#$%&()*+,-./:<=>?[\\]_`{}¡£¨«¬°±´¸»¿×÷˚˜–—‘’“”…€−", "accents": "ÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝàáâãäçèéêëìíîïñòóôõöùúûüýÿŠšŸŽž", "other": "ªºˆˇ"}, "Cameno-ExpandedBold.ttf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZÆØŒ", "lower": "abcdefghijklmnopqrstuvwxyzæøœ", "numbers": "0123456789", "symbols": "!$%&()*+,-./<=>?[\\]_`{}¡£¨«¬°±´¸»¿×÷˜–—‘’“”…€−", "accents": "ÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝàáâãäçèéêëìíîïñòóôõöùúûüýÿŠšŸŽž", "other": "ªºˆˇ"}, "Cameno-ExpandedLight.ttf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZÆØŒ", "lower": "abcdefghijklmnopqrsuvwxyzæøœ", "numbers": "0123456789", "symbols": "!$%&()*+,-./<=>?[\\]_`{}¡£¨«¬°±´¸»¿×÷˜–—‘’“”…€−", "accents": "ÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝàáâãäèéêëìíîïñòóôõöùúûüýÿŠšŸŽž", "other": "ªºˆˇ"}, "Cameno-ExpandedMedium.ttf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZÆØŒ", "lower": "abcdefghijklmnopqrstuvwxyzæøœ", "numbers": "0123456789", "symbols": "!#$%&()*+,-./:<=>?[\\]_`{}¡£¨«¬°±´¸»¿×÷˚˜–—‘’“”…€−", "accents": "ÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝàáâãäçèéêëìíîïñòóôõöùúûüýÿŠšŸŽž", "other": "ªºˆˇ"}, "Cameno-ExpandedRegular.ttf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZÆØŒ", "lower": "abcdefghijklmnopqrstuvwxyzæøœ", "numbers": "0123456789", "symbols": "!#$%&()*+,-./:<=>?[\\]_`{}¡£¨«°±´¸»¿×÷˚˜–—‘’“”…€−", "accents": "ÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝàáâãäçèéêëìíîïñòóôõöùúûüýÿŠšŸŽž", "other": "ªºˆˇ"}, "Cameno-Light.ttf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZÆØŒ", "lower": "abcdefghijklmnopqrstuvwxyzæøœ", "numbers": "0123456789", "symbols": "!#$%&()*+,-./:<=>?[\\]_`{}¡£¨«¬°±´¸»¿×÷˚˜–—‘’“”…€−", "accents": "ÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝàáâãäçèéêëìíîïñòóôõöùúûüýÿŠšŸŽž", "other": "ªºˆˇ"}, "Cameno-Medium.ttf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZÆØŒ", "lower": "abcdefghijklmnopqrstuvwxyzæøœ", "numbers": "0123456789", "symbols": "!#$%&()*+,-./:<=>?[\\]_`{}¡£¨«¬°±´¸»¿×÷˚˜–—‘’“”…€−", "accents": "ÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝàáâãäçèéêëìíîïñòóôõöùúûüýÿŠšŸŽž", "other": "ªºˆˇ"}, "Cameno-Regular.ttf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZÆØŒ", "lower": "abcdefghijklmnopqrstuvwxyzæøœ", "numbers": "0123456789", "symbols": "!#$%&()*+,-./:<=>?[\\]_`{}¡£¨«¬°±´¸»¿×÷˚˜–—‘’“”…€−", "accents": "ÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝàáâãäçèéêëìíîïñòóôõöùúûüýÿŠšŸŽž", "other": "ªºˆˇ"}}, "green-pulse": {"GreenPulse-Regular.otf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZÆŒ", "lower": "æœ", "numbers": "0123456789", "symbols": "|†", "accents": "Ññ", "other": ""}}, "interstice": {"Interstice-Bold.otf": {"upper": "", "lower": "abcdefghijklmnopqrstuvwxyz", "numbers": "0123456789", "symbols": "!()*,-./:;?[]_¡·¿", "accents": "áéíñóú", "other": ""}, "Interstice-Regular.otf": {"upper": "", "lower": "abcdefghijklmnopqrstuvwxyz", "numbers": "0123456789", "symbols": "!()*,-./:;?[]_¡·¿", "accents": "áéíñóú", "other": ""}, "Interstice-Sebra.otf": {"upper": "", "lower": "abcdefghijklmnopqrstuvwxyz", "numbers": "0123456789", "symbols": "!()*,-./:;?[]_¡·¿", "accents": "áéíñóú", "other": ""}, "Interstice-Thin.otf": {"upper": "", "lower": "abcdefghijklmnopqrstuvwxyz", "numbers": "0123456789", "symbols": "!()*,-./:;?[]_¡·¿", "accents": "áéíñóú", "other": ""}}, "keta": {"Keta-Regular.ttf": {"upper": "", "lower": "abcdefghijklmnopqrstuvwxyz", "numbers": "0123456789", "symbols": ".:†", "accents": "", "other": ""}}, "nano": {"Nano-Bold.otf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZꞋ", "lower": "abcdefghijklmnopqrstuvwxyzıȷ", "numbers": "0123456789", "symbols": "!#$%&()*+,-./:;<=>?@[\\]_`{|}¡£¨©«°±´¶¸»¿×÷˘˙˚˜‘’“”•‹›€™←↑→↓↖↗↘↙−≠≤≥", "accents": "ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöùúûüýÿŴŵŶŷŸẀẁẂẃẄẅỲỳ", "other": "ˆˇꞌ"}, "Nano-BoldItalic.otf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZꞋ", "lower": "abcdefghijklmnopqrstuvwxyzıȷ", "numbers": "0123456789", "symbols": "!#$%&()*+,-./:;<=>?@[\\]_`{|}¡£¨©«°±´¶¸»¿×÷˘˙˚˜‘’“”•‹›€™←↑→↓↖↗↘↙−≠≤≥", "accents": "ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöùúûüýÿŴŵŶŷŸẀẁẂẃẄẅỲỳ", "other": "ˆˇꞌ"}, "Nano-Light.otf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZꞋ", "lower": "abcdefghijklmnopqrstuvwxyzıȷ", "numbers": "0123456789", "symbols": "!#$%&()*+,-./:;<=>?@[\\]_`{|}¡£¨©«°±´¶¸»¿×÷˘˙˚˜‘’“”•‹›€™←↑→↓↖↗↘↙−≠≤≥", "accents": "ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöùúûüýÿŴŵŶŷŸẀẁẂẃẄẅỲỳ", "other": "ˆˇꞌ"}, "Nano-LightItalic.otf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZꞋ", "lower": "abcdefghijklmnopqrstuvwxyzıȷ", "numbers": "0123456789", "symbols": "!#$%&()*+,-./:;<=>?@[\\]_`{|}¡£¨©«°±´¶¸»¿×÷˘˙˚˜‘’“”•‹›€™←↑→↓↖↗↘↙−≠≤≥", "accents": "ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöùúûüýÿŴŵŶŷŸẀẁẂẃẄẅỲỳ", "other": "ˆˇꞌ"}, "Nano-Regular.otf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZꞋ", "lower": "abcdefghijklmnopqrstuvwxyzıȷ", "numbers": "0123456789", "symbols": "!#$%&()*+,-./:;<=>?@[\\]_`{|}¡£¨©«°±´¶¸»¿×÷˘˙˚˜‘’“”•‹›€™←↑→↓↖↗↘↙−≠≤≥", "accents": "ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöùúûüýÿŴŵŶŷŸẀẁẂẃẄẅỲỳ", "other": "ˆˇꞌ"}, "Nano-RegularItalic.otf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZꞋ", "lower": "abcdefghijklmnopqrstuvwxyzıȷ", "numbers": "0123456789", "symbols": "!#$%&()*+,-./:;<=>?@[\\]_`{|}¡£¨©«°±´¶¸»¿×÷˘˙˚˜‘’“”•‹›€™←↑→↓↖↗↘↙−≠≤≥", "accents": "ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöùúûüýÿŴŵŶŷŸẀẁẂẃẄẅỲỳ", "other": "ˆˇꞌ"}, "Nano-Thin.otf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZꞋ", "lower": "abcdefghijklmnopqrstuvwxyzıȷ", "numbers": "0123456789", "symbols": "!#$%&()*+,-./:;<=>?@[\\]_`{|}¡£¨©«°±´¶¸»¿×÷˘˙˚˜‘’“”•‹›€™←↑→↓↖↗↘↙−≠≤≥", "accents": "ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöùúûüýÿŴŵŶŷŸẀẁẂẃẄẅỲỳ", "other": "ˆˇꞌ"}, "Nano-ThinItalic.otf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZꞋ", "lower": "abcdefghijklmnopqrstuvwxyzıȷ", "numbers": "0123456789", "symbols": "!#$%&()*+,-./:;<=>?@[\\]_`{|}¡£¨©«°±´¶¸»¿×÷˘˙˚˜‘’“”•‹›€™←↑→↓↖↗↘↙−≠≤≥", "accents": "ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöùúûüýÿŴŵŶŷŸẀẁẂẃẄẅỲỳ", "other": "ˆˇꞌ"}}, "ranger": {"Ranger-Condensed.otf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "lower": "abeghijlnqrt", "numbers": "0123456789", "symbols": "!\"'()*+,-.:;?[]_¡¿", "accents": "ÁÉÍÑÓÚÜáéñ", "other": ""}, "Ranger-CondensedBold.otf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "lower": "abeghijlnqrt", "numbers": "0123456789", "symbols": "!\"'()*+,-.:;?[]_¡¿", "accents": "ÁÉÍÑÓÚÜáéñ", "other": ""}, "Ranger-CondensedThin.otf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "lower": "abeghijlnqrt", "numbers": "0123456789", "symbols": "!\"'()*+,-.:;?[]_¡¿", "accents": "ÁÉÍÑÓÚÜáéñ", "other": ""}, "Ranger-Expanded.otf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "lower": "abeghijlnqrt", "numbers": "0123456789", "symbols": "!\"'()*+,-.:;?[]_¡¿", "accents": "ÁÉÍÑÓÚÜáéñ", "other": ""}, "Ranger-ExpandedBold.otf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "lower": "abeghijlnqrt", "numbers": "0123456789", "symbols": "!\"'()*+,-.:;?[]_¡¿", "accents": "ÁÉÍÑÓÚÜáéñ", "other": ""}, "Ranger-ExpandedThin.otf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "lower": "abeghijlnqrt", "numbers": "0123456789", "symbols": "!\"'()*+,-.:;?[]_¡¿", "accents": "ÁÉÍÑÓÚÜáéñ", "other": ""}, "Ranger-PixelCondensed.otf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "lower": "abeghijlnqrt", "numbers": "0123456789", "symbols": "!\"'()*+,-.:;?[]_¡¿", "accents": "ÁÉÍÑÓÚÜáéñ", "other": ""}, "Ranger-PixelCondensedBold.otf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "lower": "abeghijlnqrt", "numbers": "0123456789", "symbols": "!\"'()*+,-.:;?[]_¡¿", "accents": "ÁÉÍÑÓÚÜáéñ", "other": ""}, "Ranger-PixelCondensedThin.otf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "lower": "abeghijlnqrt", "numbers": "0123456789", "symbols": "!\"'()*+,-.:;?[]_¡¿", "accents": "ÁÉÍÑÓÚÜáéñ", "other": ""}, "Ranger-PixelExpanded.otf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "lower": "abeghijlnqrt", "numbers": "0123456789", "symbols": "!\"'()*+,-.:;?[]_¡¿", "accents": "ÁÉÍÑÓÚÜáéñ", "other": ""}, "Ranger-PixelExpandedBold.otf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "lower": "abeghijlnqrt", "numbers": "0123456789", "symbols": "!\"'()*+,-.:;?[]_¡¿", "accents": "ÁÉÍÑÓÚÜáéñ", "other": ""}, "Ranger-PixelExpandedThin.otf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "lower": "abeghijlnqrt", "numbers": "0123456789", "symbols": "!\"'()*+,-.:;?[]_¡¿", "accents": "ÁÉÍÑÓÚÜáéñ", "other": ""}, "Ranger-PixelRegular.otf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "lower": "abeghijlnqrt", "numbers": "0123456789", "symbols": "!\"'()*+,-.:;?[]_¡¿", "accents": "ÁÉÍÑÓÚÜáéñ", "other": ""}, "Ranger-PixelRegularBold.otf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "lower": "abeghijlnqrt", "numbers": "0123456789", "symbols": "!\"'()*+,-.:;?[]_¡¿", "accents": "ÁÉÍÑÓÚÜáéñ", "other": ""}, "Ranger-PixelRegularThin.otf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "lower": "abeghijlnqrt", "numbers": "0123456789", "symbols": "!\"'()*+,-.:;?[]_¡¿", "accents": "ÁÉÍÑÓÚÜáéñ", "other": ""}, "Ranger-Regular.otf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "lower": "abeghijlnqrt", "numbers": "0123456789", "symbols": "!\"'()*+,-.:;?[]_¡¿", "accents": "ÁÉÍÑÓÚÜáéñ", "other": ""}, "Ranger-RegularBold.otf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "lower": "abeghijlnqrt", "numbers": "0123456789", "symbols": "!\"'()*+,-.:;?[]_¡¿", "accents": "ÁÉÍÑÓÚÜáéñ", "other": ""}, "Ranger-RegularThin.otf": {"upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "lower": "abeghijlnqrt", "numbers": "0123456789", "symbols": "!\"'()*+,-.:;?[]_¡¿", "accents": "ÁÉÍÑÓÚÜáéñ", "other": ""}}};
+  // Glifos de un peso: solo los que existen de verdad en el archivo
+  function glyphsOf(f, i) {
+    const raw = (GLYPHSETS[f.slug] || {})[f.weights[i].file] || {};
+    const o = {}; for (const k of ['upper', 'lower', 'numbers', 'symbols', 'accents', 'other']) o[k] = [...(raw[k] || '')];
+    o.all = new Set(Object.values(o).flat().concat([' ', '\n']));
+    o.hasN = o.accents.includes('ñ') || o.accents.includes('Ñ');
+    o.vowelAccents = o.accents.filter(c => /[áéíóúÁÉÍÓÚ]/.test(c));
+    o.up = o.upper.some(c => /[A-Z]/.test(c)); o.lo = o.lower.some(c => /[a-z]/.test(c));
+    return o;
+  }
+  // Nombre: solo minúsculas → en minúscula · solo mayúsculas o ambas → en mayúscula
+  const nameCase = (txt, g) => g.lo && !g.up ? txt.toLowerCase() : txt.toUpperCase();
+  const fitCase = (txt, g) => g.up && !g.lo ? txt.toUpperCase() : g.lo && !g.up ? txt.toLowerCase() : txt;
+  const fpH = html => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; };
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const ARROW = '<svg class="fp-arrow" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1"><path d="M1.5 8.5 8.5 1.5M3 1.5h5.5V7"/></svg>';
+  const DOWN = '<svg class="fp-down" viewBox="0 0 11 13" fill="none" stroke="currentColor" stroke-width="1"><path d="M5.5 0v12M1 7.5l4.5 4.5L10 7.5"/></svg>';
+  const fpBar = label => `<div class="section-bar block"><span class="label-01">${esc(String(label).toUpperCase())}</span></div>`;
+  const link = (url, txt) => url ? `<a href="${esc(url)}" target="_blank" rel="noopener">${txt}</a>` : `<span>${txt}</span>`;
+  let toastEl, toastT;
+  function toast(msg) { if (!toastEl) { toastEl = fpH('<div class="fp-toast block"><span class="label-01"></span></div>'); body.appendChild(toastEl); } toastEl.firstChild.textContent = msg; toastEl.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => toastEl.classList.remove('on'), 2600); }
+
+  let renderToken = 0;
+  async function renderFontPage(slug) {
+    const token = ++renderToken;
+    const page = document.getElementById('fontRest');
+    page.innerHTML = '';
+    document.getElementById('related').innerHTML = '';
+    document.getElementById('typeFooter').innerHTML = '';
+    await loadData();
+    const font = DATA[slug]; if (!font || token !== renderToken) return;
+    const W = font.weights || [], def = defW(font);
+    await Promise.all(W.map((_, i) => loadFace(font, i)));
+    if (token !== renderToken) return;
+    const fam = i => `'${famOf(slug, i)}', 'Oswald RR'`;
+    const G = glyphsOf(font, def);
+    const dir = fontDir(slug);
+
+    // ── 2 · Info ──
+    const feats = [];
+    if (font.category) feats.push({ w: 2, s: esc(font.category), l: font.category + ' typeface' });
+    if (W.length) feats.push({ w: 1, s: '<span class="fp-w"><i>A</i>A<b>A</b></span>', l: W.length + (W.length === 1 ? ' weight' : ' weights') });
+    if (G.lower.length) feats.push({ w: 1, s: 'abc', l: 'Lowercase' });
+    if (G.upper.length) feats.push({ w: 1, s: 'ABC', l: 'Uppercase' });
+    if (G.numbers.length) feats.push({ w: 1, s: '123', l: 'Contains numbers' });
+    if (G.symbols.length > 3) feats.push({ w: 1, s: '@!?', l: 'Contains symbols' });
+    if (G.vowelAccents.length) feats.push({ w: 1, s: 'á', l: 'Contains accents' });
+    if (G.hasN) feats.push({ w: 1, s: 'ñ', l: 'Contains Ñ' });
+    page.appendChild(fpH(`<div>${fpBar('Info')}
+      <div class="fp-info block white">
+        <p class="t02 fp-name">${esc(nameCase(font.name, G))}</p>
+        <p class="t02">${link(font.authorUrl, 'by ' + esc(font.author) + ' ' + ARROW)}</p>
+        ${font.handle ? `<p class="t02">${link(font.handleUrl, esc(font.handle))}</p>` : ''}
+        ${font.credits ? `<p class="t02 fp-cred">${esc(font.credits)}</p>` : ''}
+      </div>
+      <div class="fp-feats block white"><div class="fp-row">
+        ${feats.map(f => `<div class="fp-f block${f.w === 2 ? ' w2' : ''}"><span class="label s">${f.s}</span><span class="label l">${esc(f.l)}</span></div>`).join('')}
+      </div></div></div>`));
+    // como en tu font.js: al pasar por encima el botón se ensancha y explica qué significa
+    const fcol = () => (page.clientWidth - 11 * BL) / 12;
+    const sizeFeats = () => page.querySelectorAll('.fp-f').forEach(f => {
+      const c = fcol(), base = f.classList.contains('w2') ? Math.max(100, c) : Math.max(46, (c - BL) / 2);
+      f._base = base; f.style.width = base + 'px';
+    });
+    sizeFeats(); window.addEventListener('resize', sizeFeats);
+    page.querySelectorAll('.fp-f').forEach(f => {
+      f.addEventListener('mouseenter', () => f.style.width = Math.max(f._base, f.querySelector('.l').scrollWidth + BL * 4) + 'px');
+      f.addEventListener('mouseleave', () => f.style.width = f._base + 'px');
+    });
+
+    // ── 3 · Galería + textos ──
+    const imgs = font.images || [], txts = font.texts || [];
+    if (imgs.length || txts.length) {
+      const gal = fpH('<div class="fp-gallery"></div>');
+      const n = Math.max(imgs.length, txts.length), span = n === 1 ? 12 : 6;
+      for (let i = 0; i < n; i += 2) {
+        for (let j = i; j < Math.min(i + 2, n); j++) gal.appendChild(fpH(`<div class="fp-ph" style="--span:${span}">${imgs[j] ? `<img src="${dir}images/${encodeURI(imgs[j])}" alt="${esc(font.name)} · ${j + 1}" loading="lazy">` : ''}</div>`));
+        for (let j = i; j < Math.min(i + 2, n); j++) gal.appendChild(fpH(`<div class="fp-tx block" style="--span:${span}"><p class="t02">${esc(txts[j] || '')}</p></div>`));
+      }
+      page.appendChild(gal);
+    }
+
+    // ── 4 · Prueba tipográfica (una por peso) ──
+    const PANGRAMS = [
+      'The quick brown fox jumps over the lazy dog', 'Sphinx of black quartz, judge my vow',
+      'Pack my box with five dozen liquor jugs', 'How vexingly quick daft zebras jump',
+      'Jackdaws love my big sphinx of quartz', 'Typography is what language looks like',
+      'Waltz, bad nymph, for quick jigs vex', 'Bright vixens jump; dozy fowl quack',
+    ];
+    const ACC = 'Árbol, canción, corazón, música, después, también, sí';
+    const ENE = 'El niño soñó con la montaña y el señor del año';
+    const ICON = {
+      left: '<svg viewBox="0 0 17 14" fill="none" stroke="currentColor"><path d="M0 .5h17M0 4.8h11M0 9.1h17M0 13.5h8"/></svg>',
+      center: '<svg viewBox="0 0 17 14" fill="none" stroke="currentColor"><path d="M0 .5h17M3 4.8h11M0 9.1h17M4.5 13.5h8"/></svg>',
+      right: '<svg viewBox="0 0 17 14" fill="none" stroke="currentColor"><path d="M0 .5h17M6 4.8h11M0 9.1h17M9 13.5h8"/></svg>',
+    };
+    // si falta una letra se prueba en la otra caja; si tampoco existe, se quita
+    const keep = (txt0, g) => { let txt = fitCase(txt0, g); if ([...txt].some(c => !g.all.has(c) && g.all.has(c.toUpperCase()))) txt = txt.toUpperCase(); return [...txt].map(c => g.all.has(c) ? c : g.all.has(c.toUpperCase()) ? c.toUpperCase() : g.all.has(c.toLowerCase()) ? c.toLowerCase() : '').join('').replace(/  +/g, ' ').trim(); };
+    W.forEach((w, wi) => {
+      const sec = fpH(`<section class="fp-tester">${fpBar(w.name)}
+        <div class="tester-area block white"><div class="tester-text" contenteditable="true" spellcheck="false"></div></div>
+        <div class="controls">
+          <div class="ctl block c-weight fp-sel"><span class="label wn">${esc(w.name)}</span>${DOWN}
+            <select aria-label="Weight">${W.map((x, k) => `<option value="${k}" ${k === wi ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}</select></div>
+          <label class="ctl block c-size"><span class="label">Tt</span><input class="fp-rng" type="range" min="12" max="400" step="1" aria-label="Size"><span class="label val sv"></span></label>
+          <label class="ctl block c-lead"><span class="label k lead-k lead-ico">A</span><input class="fp-num lead" type="number" step="1" aria-label="Leading"></label>
+          <label class="ctl block c-track"><span class="label k track-k">Av</span><input class="fp-num track" type="number" step="5" aria-label="Tracking"></label>
+          <button class="ctl block dim c-abc" data-t="abc"><span class="label">abc</span></button>
+          <button class="ctl block dim c-num" data-t="123"><span class="label">123</span></button>
+          <button class="ctl block dim c-sym" data-t="sym"><span class="label">@!?</span></button>
+          <button class="ctl block dim c-acc" data-t="acc"><span class="label">á</span></button>
+          <button class="ctl block dim c-enye" data-t="ene"><span class="label">ñ</span></button>
+          <button class="ctl block c-left al" data-a="left" aria-label="Align left">${ICON.left}</button>
+          <button class="ctl block c-center al" data-a="center" aria-label="Align center">${ICON.center}</button>
+          <button class="ctl block c-right al" data-a="right" aria-label="Align right">${ICON.right}</button>
+        </div></section>`);
+      page.appendChild(sec);
+      const $ = q => sec.querySelector(q);
+      const txt = $('.tester-text'), size = $('.fp-rng'), sv = $('.sv'), lead = $('.lead'), track = $('.track'), sel = $('select');
+      const st = { w: wi, size: Math.round(Math.min(150, Math.max(48, page.clientWidth / 10))), lead: null, track: -10, align: 'center' };
+      const g = () => glyphsOf(font, st.w);
+      let gl = g();
+      txt.textContent = keep(font.tester || 'Lorem ipsum', gl);
+      function apply() {
+        const L = st.lead == null ? Math.round(st.size * 1.1) : st.lead;
+        Object.assign(txt.style, { fontFamily: fam(st.w), fontSize: st.size + 'px', lineHeight: L + 'px', letterSpacing: (st.track / 1000) + 'em', textAlign: st.align });
+        size.value = st.size; sv.textContent = st.size;
+        if (document.activeElement !== lead) lead.value = L;
+        if (document.activeElement !== track) track.value = st.track;
+        $('.wn').textContent = W[st.w].name;
+        $('.section-bar .label-01').textContent = W[st.w].name.toUpperCase();
+        sec.querySelectorAll('.al').forEach(b => b.classList.toggle('on', b.dataset.a === st.align));
+        $('[data-t="123"]').disabled = !gl.numbers.length;
+        $('[data-t="sym"]').disabled = gl.symbols.length < 2;
+        $('[data-t="acc"]').disabled = !gl.vowelAccents.length;
+        $('[data-t="ene"]').disabled = !gl.hasN;
+        fitArea();
+      }
+      const area = $('.tester-area');
+      function fitArea() {
+        area.style.minHeight = '';
+        const need = txt.scrollHeight + BL * 6;
+        area.style.minHeight = Math.max(47, Math.ceil(need / BL)) * BL + 'px';
+      }
+      txt.addEventListener('input', fitArea);
+      window.addEventListener('resize', fitArea);
+      document.fonts.ready.then(fitArea);
+      size.addEventListener('input', () => { st.size = +size.value; apply(); });
+      lead.addEventListener('input', () => { if (lead.value !== '') { st.lead = +lead.value; apply(); } });
+      track.addEventListener('input', () => { if (track.value !== '') { st.track = +track.value; apply(); } });
+      sel.addEventListener('change', () => { st.w = +sel.value; gl = g(); apply(); });
+      const scrub = (el, get, set, k) => el.addEventListener('pointerdown', e => {
+        e.preventDefault(); const x0 = e.clientX, v0 = get(); el.setPointerCapture(e.pointerId);
+        const mv = ev => { set(Math.round(v0 + (ev.clientX - x0) * k)); apply(); };
+        el.addEventListener('pointermove', mv);
+        el.addEventListener('pointerup', () => el.removeEventListener('pointermove', mv), { once: true });
+      });
+      scrub($('.lead-k'), () => st.lead ?? Math.round(st.size * 1.1), v => st.lead = Math.max(1, v), 1);
+      scrub($('.track-k'), () => st.track, v => st.track = v, 2);
+      let pi = Math.floor(Math.random() * PANGRAMS.length);
+      sec.querySelectorAll('[data-t]').forEach(b => b.addEventListener('click', () => {
+        const t = b.dataset.t;
+        if (t === 'abc') { pi = (pi + 1 + Math.floor(Math.random() * (PANGRAMS.length - 1))) % PANGRAMS.length; txt.textContent = keep(PANGRAMS[pi], gl); }
+        if (t === '123') txt.textContent = gl.numbers.join('');
+        if (t === 'sym') txt.textContent = gl.symbols.join(' ');
+        if (t === 'acc') txt.textContent = keep(ACC, gl);
+        if (t === 'ene') txt.textContent = keep(ENE, gl);
+        fitArea();
+      }));
+      sec.querySelectorAll('.al').forEach(b => b.addEventListener('click', () => { st.align = b.dataset.a; apply(); }));
+      txt.addEventListener('paste', e => { e.preventDefault(); document.execCommand('insertText', false, e.clipboardData.getData('text/plain')); });
+      apply();
+    });
+
+    // ── 5 · Glifos (panel derecho sticky) ──
+    page.appendChild(fpH(fpBar('Glyphs')));
+    const list = [...new Set([...G.upper, ...G.lower, ...G.numbers, ...G.symbols, ...G.accents, ...G.other, ...(font.extraGlyphs || [])])];
+    const gsec = fpH(`<section class="fp-glyphs">
+      <div class="fp-cells">${list.map(c => `<div class="fp-cell block" data-c="${esc(c)}" style="font-family:${fam(def)}">${esc(c)}</div>`).join('')}</div>
+      <div class="fp-side">
+        <div class="fp-big block"><span class="gl" style="font-family:${fam(def)}"></span><span class="code label-01"></span></div>
+        ${W.length > 1 ? `<div class="ctl block fp-sel"><span class="label wn">${esc(W[def].name)}</span>${DOWN}<select aria-label="Weight">${W.map((x, k) => `<option value="${k}" ${k === def ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}</select></div>` : ''}
+      </div></section>`);
+    page.appendChild(gsec);
+    const big = gsec.querySelector('.gl'), code = gsec.querySelector('.code');
+    const show = cell => {
+      gsec.querySelectorAll('.fp-cell.act').forEach(c => c.classList.remove('act'));
+      cell.classList.add('act');
+      const c = cell.dataset.c; big.textContent = c;
+      code.textContent = [...c].map(ch => 'U+' + ch.codePointAt(0).toString(16).toUpperCase().padStart(4, '0')).join(' ');
+    };
+    gsec.querySelectorAll('.fp-cell').forEach(c => { c.addEventListener('mouseenter', () => show(c)); c.addEventListener('click', () => show(c)); });
+    if (list.length) show(gsec.querySelector('.fp-cell'));
+    const gsel = gsec.querySelector('select');
+    if (gsel) gsel.addEventListener('change', () => {
+      const f = fam(+gsel.value); big.style.fontFamily = f;
+      gsec.querySelectorAll('.fp-cell').forEach(c => c.style.fontFamily = f);
+      gsec.querySelector('.wn').textContent = W[+gsel.value].name;
+    });
+
+    // ── 6 · Descarga + enlaces ──
+    page.appendChild(fpH('<div class="section-bar block"></div>'));
+    const L = font.links || {}, lic = font.license || {};
+    const licFile = dir + (lic.file || 'LICENSE.txt');
+    const dl = fpH(`<section class="fp-dl">
+      <div class="fp-who block white">
+        <p class="t02 fp-name">${esc(nameCase(font.name, G))}</p>
+        <p class="t02">${link(font.authorUrl, 'by ' + esc(font.author) + ' ' + ARROW)}</p>
+        ${font.handle ? `<p class="t02">${link(font.handleUrl, esc(font.handle))}</p>` : ''}
+      </div>
+      <button class="fp-btn block"><span class="t03">DOWNLOAD</span></button>
+      <a class="fp-lk block s6 ${L.contribute ? '' : 'off'}" href="${esc(L.contribute || '#')}" target="_blank" rel="noopener"><span class="label">CONTRIBUTE</span></a>
+      <a class="fp-lk block s5" href="${esc(lic.url || licFile)}" target="_blank" rel="noopener"><span class="label">${esc((lic.name || 'License').toUpperCase())}</span></a>
+      <a class="fp-lk block s1" href="${esc(licFile)}" target="_blank" rel="noopener" aria-label="License file">${ARROW}</a>
+    </section>`);
+    page.appendChild(dl);
+    dl.querySelector('.fp-btn').addEventListener('click', e => download(e.currentTarget));
+    async function download(btn) {
+      if (font.download) { location.href = dir + font.download; return; }
+      if (location.protocol === 'file:') { toast('Downloads work once the site is online (or through a local server)'); return; }
+      const lbl = btn.querySelector('.t03');
+      btn.classList.add('busy'); lbl.textContent = 'PACKING…';
+      try {
+        if (!window.JSZip) await loadScript('assets/vendor/jszip.min.js');
+        const base = 'ErreErre_' + font.name.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Za-z0-9]+/g, '');
+        const zip = new JSZip(), root = zip.folder(base);
+        const folder = ext => ({ otf: '01_Fonts/OTF', ttf: '01_Fonts/TTF', woff: '01_Fonts/WEB', woff2: '01_Fonts/WEB' }[ext] || '01_Fonts');
+        for (const w of W) for (const f of [w.file, ...(w.extra || [])]) {
+          const r = await fetch(dir + 'fonts/' + encodeURI(f));
+          if (r.ok) root.file(folder(f.split('.').pop().toLowerCase()) + '/' + f, await r.blob());
+        }
+        const lr = await fetch(licFile);
+        if (lr.ok) root.file('02_License/' + (lic.file || 'LICENSE.txt'), await lr.text());
+        root.file('README.txt', readme());
+        const blob = await zip.generateAsync({ type: 'blob' });
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = base + '.zip';
+        body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+      } catch (err) { toast('Download failed · ' + err.message); }
+      btn.classList.remove('busy'); lbl.textContent = 'DOWNLOAD';
+    }
+    function readme() {
+      const line = '─'.repeat(48);
+      return [
+        font.name.toUpperCase(), 'by ' + font.author + (font.handle ? '  ' + font.handle : ''), line,
+        'Version   ' + (font.version || '1.000'), 'Year      ' + (font.year || ''),
+        'Weights   ' + W.map(w => w.name).join(', '),
+        'License   ' + (lic.name || '') + (lic.url ? '  ' + lic.url : ''),
+        font.credits ? 'Credits   ' + font.credits : '', line, 'CONTENTS',
+        '01_Fonts/OTF   Desktop fonts (recommended for design apps)',
+        '01_Fonts/TTF   Desktop fonts (TrueType)',
+        '01_Fonts/WEB   Web fonts (WOFF / WOFF2), when available',
+        '02_License     License — please read before use', line, 'INSTALL',
+        'macOS     Double-click the .otf file › Install Font',
+        'Windows   Right-click the .otf file › Install for all users', line,
+        'Published by ERRE ERRE FOUNDRY', '',
+      ].filter(x => x !== '').join('\n');
+    }
+
+    // ── 7 · Relacionadas + pie ──
+    page.appendChild(fpH(fpBar('Related fonts')));
+    let rel = (font.related || []).filter(s => s !== slug && CATALOGUE.includes(s));
+    if (rel.length < 3) rel = rel.concat(CATALOGUE.filter(s => s !== slug && !rel.includes(s)).sort(() => Math.random() - .5)).slice(0, 3);
+    const box = document.getElementById('related');
+    rel.slice(0, 3).forEach(rid => { const src = content.querySelector(`.card[data-id="${rid}"]`); if (src) box.appendChild(src.cloneNode(true)); });
+    const tf = document.getElementById('typeFooter');
+    tf.appendChild(document.querySelector('#bodyWrap .footer').cloneNode(true));
+    requestAnimationFrame(() => { alignBaselines(); placeSmileys(); });
+  }
+  loadData();
+  function showType(id, ms) {
+    cancelIntro();
+    body.classList.add('is-type');
+    setActive('#catalogue');          // las tipografías son parte del catálogo
+    heroName.textContent = '';
+    measure(); go(0, ms);          // menú plegado: solo la barra (tu página 5)
+    scrollTo(0, 0);
+    // portada: el texto "hero" de info.js en el peso por defecto
+    loadData().then(async () => {
+      const f = DATA[id]; if (!f) return;
+      document.title = f.name + ' · ERRE ERRE FOUNDRY';
+      const fam = await loadFace(f, defW(f));
+      heroName.textContent = nameCase(f.hero || f.name, glyphsOf(f, defW(f)));
+      heroName.style.fontFamily = `"${fam}"`;
+      heroName.style.animation = 'none'; heroName.offsetWidth; heroName.style.animation = '';
+      fitHero();
+    });
+    renderFontPage(id);
+  }
+  // ---------- RESOURCES (tu página 7): artículos que llevan a webs externas ----------
+  let articlesReady = null;
+  function loadArticles() {
+    if (!articlesReady) articlesReady = new Promise(res => { window.RR.articles = list => { window.RR._articles = list; }; loadScript('content/articles.js').then(() => res(window.RR._articles || [])); });
+    return articlesReady;
+  }
+  const GO = '<svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1"><path d="M1.5 8.5 8.5 1.5M3 1.5h5.5V7"/></svg>';
+  async function showResources(ms) {
+    cancelIntro();
+    const wasRes = body.classList.contains('is-res');
+    body.classList.remove('is-type', 'is-bld', 'is-pg'); body.classList.add('is-res'); PG.stop();
+    document.title = 'RESOURCES · ERRE ERRE FOUNDRY';
+    buttons.querySelectorAll('a').forEach(b => b.classList.toggle('is-active', b.getAttribute('href') === '#resources'));
+    buttons.classList.add('has-active');
+    measure(); go(1, ms);              // sin logo: la intro solo se ve una vez
+    if (!wasRes) scrollTo(0, 0);
+    const list = await loadArticles();
+    const box = document.getElementById('articles');
+    if (!box.childElementCount) {
+      list.forEach((a, i) => {
+        const img = `<div class="art-ph">${a.image ? `<img src="content/articles/${encodeURI(a.image)}" alt="" loading="lazy">` : ''}</div>`;
+        const side = `<div class="art-side">
+          <div class="block art-blk art-meta" style="--c:4"><span class="label">${esc(a.type || 'ARTICLE')}</span></div>
+          <div class="block art-blk art-meta" style="--c:1"><span class="label">${esc(a.date || '')}</span></div>
+          <div class="block art-blk art-meta" style="--c:1"><span class="label">${esc(a.year || '')}</span></div>
+          <div class="block white art-blk art-who" style="--c:6"><span class="t03">${esc((a.author || '').toUpperCase())}</span></div>
+          <div class="block art-blk art-ttl" style="--c:4"><p class="t02">${esc(a.title || '')}</p></div>
+          <div class="block art-blk art-go" style="--c:2">${GO}</div>
+        </div>`;
+        const ok = a.url && a.url !== 'https://';
+        box.appendChild(fpH(`<a class="art" ${ok ? `href="${esc(a.url)}" target="_blank" rel="noopener"` : ''}>${i % 2 ? side + img : img + side}</a>`));
+      });
+      document.getElementById('resFooter').appendChild(document.querySelector('#bodyWrap .footer').cloneNode(true));
+    }
+    requestAnimationFrame(placeSmileys);
+  }
+  // ---------- BUILDER (tus páginas 8–12): tu builder, dentro de la web ----------
+  const bldFrame = document.getElementById('bldFrame');
+  function showBuilder(ms) {
+    cancelIntro();
+    body.classList.remove('is-type', 'is-res', 'is-pg'); body.classList.add('is-bld'); PG.stop();
+    document.title = 'BUILDER · ERRE ERRE FOUNDRY';
+    buttons.querySelectorAll('a').forEach(b => b.classList.toggle('is-active', b.getAttribute('href') === '#builder'));
+    buttons.classList.add('has-active');
+    measure(); go(1, ms);              // como en el resto: botones visibles, sin logo
+    scrollTo(0, 0);
+    if (!bldFrame.getAttribute('src')) bldFrame.src = 'builder/index.html';
+    bldFrame.addEventListener('load', () => bldFrame.contentWindow.focus(), { once: true });
+    setTimeout(() => { try { bldFrame.contentWindow.focus(); } catch (e) {} }, ms + 50);
+  }
+  // ---------- PLAYGROUND: escribe con cualquier tipografía de ERRE ERRE · la cámara mueve las letras ----------
+  const PG = (() => {
+    const stage = document.getElementById('pgStage');
+    const txt = document.getElementById('pgText'), sel = document.getElementById('pgFont');
+    const cv = document.getElementById('pgLetters'), cx = cv.getContext('2d');
+    const video = document.getElementById('pgVideo');
+    const tools = stage.querySelector('.pg-tools');
+    const btn = { spring: document.getElementById('pgSpring'), mic: document.getElementById('pgMic'), bounce: document.getElementById('pgCam'), wave: document.getElementById('pgWave') };
+    let font = null, fam = '', G = null, fs = 100, ready = null, edited = false;
+    // efectos que se pueden sumar: física (1 muelle · 3 rebote, uno de los dos), 2 micrófono, 4 ondas
+    // 1 cámara · 2 micrófono · 3 caída (se mueven con el ratón) · 4 ondas: todo se puede combinar
+    const fx = { cam: false, fall: false, mic: false, wave: false };
+    const phys = () => fx.fall ? 'bounce' : fx.cam ? 'spring' : null;
+    let raf = 0, letters = [], baseL = [], last = 0, homing = false;
+
+    // ── tipografías disponibles ──
+    function init() {
+      if (!ready) ready = (async () => {
+        await loadData();
+        sel.innerHTML = CATALOGUE.filter(k => DATA[k]).map(k => `<option value="${k}">${esc(DATA[k].name)}</option>`).join('');
+        sel.value = CATALOGUE.includes('interstice') ? 'interstice' : CATALOGUE[0];
+        await choose(sel.value);
+      })();
+      return ready;
+    }
+    async function choose(slug) {
+      const f = DATA[slug], i = defW(f);
+      await loadFace(f, i);
+      font = f; G = glyphsOf(f, i); fam = famOf(slug, i);
+      txt.style.fontFamily = `'${fam}', 'Oswald RR'`;
+      // sin escribir nada se ve el nombre de la tipografía; si has escrito algo, se mantiene
+      if (!edited || !txt.textContent.trim()) { edited = false; txt.textContent = nameCase(f.name, G); }
+      else txt.textContent = [...txt.textContent].map(fix).join('');
+      fit();
+      if (letters.length) { letters = []; homing = false; refresh(); }   // los efectos siguen encendidos con la nueva letra
+    }
+    sel.addEventListener('change', () => choose(sel.value));
+
+    // ── el texto ocupa el escenario sin cortarse ──
+    function fit() {
+      if (!txt.textContent) { txt.style.fontSize = fs + 'px'; return; }
+      txt.style.fontSize = '100px';
+      const W = stage.clientWidth * .84, H = (stage.clientHeight - tools.offsetHeight) * .5;
+      fs = Math.max(12, Math.min(100 * W / txt.scrollWidth, H / 1.25));
+      txt.style.fontSize = fs + 'px';
+    }
+    const fix = c => G.all.has(c) ? c : G.all.has(c.toUpperCase()) ? c.toUpperCase() : G.all.has(c.toLowerCase()) ? c.toLowerCase() : c;
+    txt.addEventListener('input', () => {
+      edited = true;
+      const t = txt.textContent, f = [...t].map(fix).join('');
+      if (f !== t) {
+        const sl = getSelection(), off = sl.rangeCount && txt.firstChild && sl.anchorNode === txt.firstChild ? sl.anchorOffset : f.length;
+        txt.textContent = f;
+        if (txt.firstChild) { const r = document.createRange(); r.setStart(txt.firstChild, Math.min(off, f.length)); r.collapse(true); sl.removeAllRanges(); sl.addRange(r); }
+      }
+      fit();
+    });
+    txt.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); txt.blur(); } });
+    // basta con tocar el teclado: el texto cambia sin tener que pinchar en él (también con los efectos encendidos)
+    document.addEventListener('keydown', e => {
+      if (!body.classList.contains('is-pg') || e.ctrlKey || e.metaKey || e.altKey || !G) return;
+      const a = document.activeElement;
+      if (a === txt || (a && (a.tagName === 'SELECT' || a.tagName === 'INPUT' || a.tagName === 'TEXTAREA'))) return;
+      if (e.key !== 'Backspace' && e.key.length !== 1) return;
+      e.preventDefault();
+      let t = edited ? txt.textContent : '';
+      t = e.key === 'Backspace' ? [...t].slice(0, -1).join('') : t + (e.key === ' ' ? ' ' : fix(e.key));
+      edited = true; txt.textContent = t; fit();
+      if (letters.length || anyOn()) { letters = []; baseL = []; refresh(); }
+    });
+    txt.addEventListener('paste', e => { e.preventDefault(); document.execCommand('insertText', false, (e.clipboardData.getData('text') || '').replace(/\s+/g, ' ')); });
+    addEventListener('resize', () => { if (!body.classList.contains('is-pg')) return; fit(); if (letters.length) { letters = []; refresh(); } });
+
+    // ── letras sueltas ──
+    function buildLetters() {
+      const sr = stage.getBoundingClientRect(), dpr = devicePixelRatio || 1;
+      cv.width = sr.width * dpr; cv.height = sr.height * dpr; cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      cx.font = `${fs}px '${fam}', 'Oswald RR'`; cx.textBaseline = 'alphabetic';
+      const fm = cx.measureText('Hg'), A = fm.fontBoundingBoxAscent || fs * .8, D = fm.fontBoundingBoxDescent || fs * .2;
+      baseL = [];
+      const node = txt.firstChild; if (!node) { letters = []; return; }
+      const r = document.createRange(), s0 = node.textContent;
+      let k = 0;
+      for (const ch of s0) {
+        const len = ch.length; r.setStart(node, k); r.setEnd(node, k + len); k += len;
+        if (/\s/.test(ch)) continue;
+        const b = r.getBoundingClientRect(), m = cx.measureText(ch);
+        const x = b.left - sr.left, base = b.top - sr.top + (b.height - (A + D)) / 2 + A;
+        const l = -m.actualBoundingBoxLeft, rr = m.actualBoundingBoxRight, t = -m.actualBoundingBoxAscent, bt = m.actualBoundingBoxDescent;
+        const w = Math.max(4, rr - l), h = Math.max(4, bt - t);
+        baseL.push({ ch, ox: l, oy: t, w, h, hx: x + l, hy: base + t });
+      }
+      syncLines();
+    }
+    // ondas con varias líneas: cada línea tiene sus propias letras (cada una se mueve por su cuenta)
+    function syncLines() {
+      const n = baseL.length, N = fx.wave ? wLines : 1, lineH = fs * 1.05, out = [];
+      for (let j = 0; j < N; j++) for (let i = 0; i < n; i++) {
+        const b = baseL[i], off = (j - (N - 1) / 2) * lineH;
+        let L = letters[j * n + i];
+        if (!L || L.col !== i) L = { ...b, x: b.hx, y: b.hy + off, vx: 0, vy: 0, cool: 0, s: 1, col: i, ph: (Math.random() * 2 - 1) * 1.6 };
+        L.line = j; L.hx = b.hx; L.hy = b.hy + off;
+        out.push(L);
+      }
+      letters = out;
+    }
+    // si hay muchas líneas el bloque se reduce para caber: mundo (letras) ↔ pantalla
+    function groupT() {
+      const N = fx.wave ? wLines : 1;
+      if (N <= 1 || !baseL.length) return { k: 1, cx0: 0, cy0: 0, ty: 0 };
+      const top = Math.min(...baseL.map(L => L.hy)), bot = Math.max(...baseL.map(L => L.hy + L.h));
+      const cy0 = (top + bot) / 2, avail = tools.offsetTop - BL * 2, lineH = fs * 1.05;
+      const k = Math.min(1, avail / ((N - 1) * lineH + (bot - top) * 1.6));
+      return { k, cx0: stage.clientWidth / 2, cy0, ty: k < 1 ? avail / 2 : cy0 };
+    }
+    let wPhase = 0, wSpeed = 3, wTarget = 3, wAmp = 0, wLines = 1, wLocked = false;
+    const MAX_LINES = 12;
+    function draw(c = cx, clear = true) {
+      const w = stage.clientWidth, h = stage.clientHeight;
+      if (clear) c.clearRect(0, 0, w, h);
+      c.font = `${fs}px '${fam}', 'Oswald RR'`; c.textBaseline = 'alphabetic';
+      c.fillStyle = getComputedStyle(txt).color;
+      const A = fs * .16 * wAmp, T = groupT();
+      if (T.k !== 1 || T.ty !== T.cy0) { c.save(); c.translate(T.cx0, T.ty); c.scale(T.k, T.k); c.translate(-T.cx0, -T.cy0); }
+      for (const L of letters) {
+        // ondas: cada letra con su propio desfase (no se mueven por columnas)
+        const dy = A ? Math.sin(wPhase - L.col * .55 - L.line * .9 + L.ph) * A : 0;
+        if (L.s === 1) { c.fillText(L.ch, L.x - L.ox, L.y - L.oy + dy); continue; }
+        // micrófono: cada letra crece desde su centro
+        const mx = L.x + L.w / 2, my = L.y + L.h / 2 + dy;
+        c.save(); c.translate(mx, my); c.scale(L.s, L.s); c.fillText(L.ch, -L.w / 2 - L.ox, -L.h / 2 - L.oy); c.restore();
+      }
+      if (T.k !== 1 || T.ty !== T.cy0) c.restore();
+    }
+
+    // ── física ──
+    const sound = (v, L) => { if (L.cool > 0 || !window.RRSound) return; L.cool = .07; RRSound.hit(v, L.h / 110); };
+    function step(dt) {
+      // bordes del escenario pasados a las coordenadas de las letras (por si el bloque está reducido)
+      const T = groupT(), REST = .62;
+      const X0 = (0 - T.cx0) / T.k + T.cx0, X1 = (stage.clientWidth - T.cx0) / T.k + T.cx0;
+      const Y0 = (0 - T.ty) / T.k + T.cy0, floor = (tools.offsetTop - BL - T.ty) / T.k + T.cy0;
+      if (!phys()) {                                    // sin física: vuelven a su sitio (si estaban sueltas) y se quedan quietas
+        if (!homing) { letters.forEach(L => { L.x = L.hx; L.y = L.hy; }); return; }
+        let settled = true;
+        for (const L of letters) {
+          L.vx += ((L.hx - L.x) * 60 - L.vx * 11) * dt; L.vy += ((L.hy - L.y) * 60 - L.vy * 11) * dt;
+          L.x += L.vx * dt; L.y += L.vy * dt;
+          if (Math.abs(L.x - L.hx) > .5 || Math.abs(L.y - L.hy) > .5 || Math.hypot(L.vx, L.vy) > 8) settled = false;
+        }
+        if (settled) { homing = false; letters.forEach(L => { L.x = L.hx; L.y = L.hy; L.vx = L.vy = 0; }); }
+        return;
+      }
+      if (phys() === 'spring') {                        // solo 1: tu movimiento las mueve y siempre vuelven a su sitio
+        for (const L of letters) {
+          L.vx += ((L.hx - L.x) * 18 - L.vx * 4.5) * dt; L.vy += ((L.hy - L.y) * 18 - L.vy * 4.5) * dt;
+          L.x += L.vx * dt; L.y += L.vy * dt;
+        }
+        return;
+      }
+      for (const L of letters) {                        // 3: caen, rebotan, chocan y suenan
+        L.cool -= dt;
+        L.vy += 520 * dt; L.vx *= Math.pow(.6, dt);
+        L.x += L.vx * dt; L.y += L.vy * dt;
+        if (L.x < X0) { L.x = X0; if (L.vx < -140) sound(-L.vx, L); L.vx = -L.vx * REST; }
+        if (L.x + L.w > X1) { L.x = X1 - L.w; if (L.vx > 140) sound(L.vx, L); L.vx = -L.vx * REST; }
+        if (L.y < Y0) { L.y = Y0; if (L.vy < -140) sound(-L.vy, L); L.vy = -L.vy * REST; }
+        if (L.y + L.h > floor) { L.y = floor - L.h; if (L.vy > 160) sound(L.vy, L); L.vy = Math.abs(L.vy) < 40 ? 0 : -L.vy * REST; L.vx *= Math.pow(.15, dt); }
+      }
+      for (let it = 0; it < 2; it++) for (let i = 0; i < letters.length; i++) for (let j = i + 1; j < letters.length; j++) {
+        const a = letters[i], b = letters[j];
+        const ox = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x); if (ox <= 0) continue;
+        const oy = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y); if (oy <= 0) continue;
+        if (ox < oy) {
+          const s = a.x + a.w / 2 < b.x + b.w / 2 ? -1 : 1;
+          a.x += s * ox / 2; b.x -= s * ox / 2;
+          const rv = (a.vx - b.vx) * -s;
+          if (rv > 0) { if (it === 0 && rv > 140) sound(rv, a); const m = (a.vx + b.vx) / 2, d = (a.vx - b.vx) / 2 * REST; a.vx = m - d; b.vx = m + d; }
+        } else {
+          const s = a.y + a.h / 2 < b.y + b.h / 2 ? -1 : 1;
+          a.y += s * oy / 2; b.y -= s * oy / 2;
+          const rv = (a.vy - b.vy) * -s;
+          if (rv > 0) { if (it === 0 && rv > 160) sound(rv, a); const m = (a.vy + b.vy) / 2, d = (a.vy - b.vy) / 2 * REST; a.vy = m - d; b.vy = m + d; }
+        }
+      }
+    }
+
+    // ── bucle único: suma física + micrófono + ondas ──
+    const anyOn = () => !!(fx.cam || fx.fall || fx.mic || fx.wave || homing);
+    function refresh() {
+      btn.spring.classList.toggle('on', fx.cam); btn.bounce.classList.toggle('on', fx.fall);
+      btn.mic.classList.toggle('on', fx.mic); btn.wave.classList.toggle('on', fx.wave);
+      video.classList.toggle('live', !!(fx.cam && camStream));   // la cámara es solo el 1
+      if (anyOn()) {
+        if (letters.length && letters.length !== baseL.length * (fx.wave ? wLines : 1)) syncLines();
+        if (!letters.length) { if (!txt.textContent.trim()) { fx.cam = fx.fall = fx.mic = fx.wave = false; refresh(); return; } txt.blur(); buildLetters(); }
+        stage.classList.add('cam'); txt.classList.add('hide');
+        if (!raf) { last = performance.now(); raf = requestAnimationFrame(loop); }
+      } else {
+        if (raf && letters.length && (wAmp || letters.some(L => L.s > 1.005))) return;   // deja que termine de volver
+        cancelAnimationFrame(raf); raf = 0; letters = []; baseL = []; wAmp = 0;
+        stage.classList.remove('cam'); txt.classList.remove('hide');
+      }
+    }
+    function loop(now) {
+      const dt = Math.min(.033, (now - last) / 1000 || .016); last = now;
+      if (fx.cam) motion();
+      step(dt);
+      micLevels(dt);
+      wSpeed += (wTarget - wSpeed) * Math.min(1, dt * 4);
+      wPhase += wSpeed * dt;                             // la onda nunca se para
+      wAmp += ((fx.wave ? 1 : 0) - wAmp) * Math.min(1, dt * 3);
+      if (!fx.wave && wAmp < .01) wAmp = 0;
+      draw();
+      // se apaga solo cuando todo ha vuelto a su sitio
+      if (!anyOn() && !wAmp && letters.every(L => L.s < 1.005)) { raf = 0; refresh(); return; }
+      raf = requestAnimationFrame(loop);
+    }
+
+    // ── cámara: se pide permiso una sola vez y el mismo vídeo sirve para 1 y 3 ──
+    let camStream = null, camAsk = null;
+    function getCam() {
+      if (camStream && camStream.active) { camStream.getVideoTracks().forEach(t => t.enabled = true); return Promise.resolve(camStream); }
+      if (!camAsk) camAsk = (async () => {
+        try {
+          if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error('no camera');
+          camStream = await navigator.mediaDevices.getUserMedia({ video: { width: 320, height: 240, facingMode: 'user' }, audio: false });
+          video.srcObject = camStream; await video.play().catch(() => {});
+        } catch (e) { camStream = null; toast('The camera is blocked in this preview · use the local version (or the mouse)'); }
+        camAsk = null; return camStream;
+      })();
+      return camAsk;
+    }
+    const pauseCam = () => { if (camStream) camStream.getVideoTracks().forEach(t => t.enabled = false); };   // apaga la luz sin perder el permiso
+    // 1 · cámara: tu movimiento empuja las letras (se combina con todo)
+    async function setCam() {
+      fx.cam = !fx.cam;
+      if (!fx.cam) { pauseCam(); if (!phys()) homing = true; refresh(); return; }
+      homing = false; refresh();
+      await getCam(); prev = null; refresh();
+    }
+    // 3 · caída: las letras caen, rebotan y suenan; con el ratón las mueves (con el 1, también con tu movimiento)
+    function setFall() {
+      if (window.RRSound) RRSound.unlock();
+      fx.fall = !fx.fall;
+      if (!fx.fall) { if (!phys()) homing = true; refresh(); return; }
+      homing = false; refresh();
+      letters.forEach(L => { L.vx = (Math.random() - .5) * 160; L.vy = -80 - Math.random() * 120; });
+    }
+    btn.spring.addEventListener('click', setCam);
+    btn.bounce.addEventListener('click', setFall);
+
+    const MW = 64, MH = 48, mc = document.createElement('canvas'); mc.width = MW; mc.height = MH;
+    const mxc = mc.getContext('2d', { willReadFrequently: true });
+    let prev = null, mf = 0;
+    function motion() {
+      if (!camStream || video.readyState < 2 || (mf++ & 1)) return;
+      mxc.save(); mxc.scale(-1, 1); mxc.drawImage(video, -MW, 0, MW, MH); mxc.restore();
+      const px = mxc.getImageData(0, 0, MW, MH).data, g = new Uint8Array(MW * MH);
+      for (let i = 0; i < g.length; i++) g[i] = (px[i * 4] * 3 + px[i * 4 + 1] * 6 + px[i * 4 + 2]) / 10;
+      if (prev) {
+        const W = stage.clientWidth, H = stage.clientHeight, va = (video.videoWidth || 4) / (video.videoHeight || 3);
+        const sc = Math.max(W / va, H) / H, vw = H * sc * va, vh = H * sc, offX = (vw - W) / 2, offY = (vh - H) / 2;
+        const T = groupT(), sx_ = x => (x - T.cx0) * T.k + T.cx0, sy_ = y => (y - T.cy0) * T.k + T.ty;
+        const toG = (x, y) => [Math.floor((sx_(x) + offX) / vw * MW), Math.floor((sy_(y) + offY) / vh * MH)];
+        for (const L of letters) {
+          const pad = Math.max(L.w, L.h) * .5;
+          const [x0, y0] = toG(L.x - pad, L.y - pad), [x1, y1] = toG(L.x + L.w + pad, L.y + L.h + pad);
+          let n = 0, sx = 0, sy = 0, tot = 0;
+          for (let y = Math.max(0, y0); y <= Math.min(MH - 1, y1); y++) for (let x = Math.max(0, x0); x <= Math.min(MW - 1, x1); x++) {
+            tot++; const i = y * MW + x;
+            if (Math.abs(g[i] - prev[i]) > 14) { n++; sx += x; sy += y; }
+          }
+          if (!n || !tot) continue;
+          const cxG = sx / n, cyG = sy / n, [lx, ly] = toG(L.x + L.w / 2, L.y + L.h / 2);
+          let dx = lx - cxG, dy = ly - cyG - 1.2; const d = Math.hypot(dx, dy) || 1; dx /= d; dy /= d;
+          const f = Math.min(1, n / tot * 4) * 1500;        // más sensible al movimiento
+          L.vx += dx * f * .5; L.vy += dy * f * .5;
+        }
+      }
+      prev = g;
+    }
+    // el ratón también empuja (y marca la velocidad de las ondas)
+    let pp = null;
+    stage.addEventListener('pointermove', e => {
+      const r = stage.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, t = performance.now();
+      const k = Math.max(0, Math.min(1, x / r.width));
+      if (!wLocked) wTarget = .4 + k * k * 11;          // ondas: izquierda lento, derecha rápido
+      if (fx.wave && !wLocked) { const up = 1 - Math.max(0, Math.min(1, y / (tools.offsetTop || r.height))); const nl = Math.min(MAX_LINES, 1 + Math.floor(up * MAX_LINES)); if (nl !== wLines) { wLines = nl; if (letters.length) syncLines(); } }   // arriba más líneas, abajo menos (mínimo 1)
+      if (phys() && pp) {
+        const T = groupT(), wx = (x - T.cx0) / T.k + T.cx0, wy = (y - T.ty) / T.k + T.cy0;
+        const dt = Math.max(8, t - pp.t) / 1000, vx = (x - pp.x) / dt / T.k, vy = (y - pp.y) / dt / T.k;
+        for (const L of letters) {
+          const nx = Math.max(L.x, Math.min(wx, L.x + L.w)), ny = Math.max(L.y, Math.min(wy, L.y + L.h));
+          if (Math.hypot(nx - wx, ny - wy) < 36 / T.k) { L.vx += vx * .7; L.vy += vy * .7 - 60; }
+        }
+      }
+      if (fake) { fake.x = k; fake.level = Math.min(1, fake.level + Math.min(.25, Math.hypot(e.movementX || 0, e.movementY || 0) / 120)); }
+      pp = { x, y, t };
+    });
+
+    // ── 2 · micrófono: permiso una sola vez; cada letra escucha una franja (graves a la izquierda, agudos a la derecha) ──
+    let micStream = null, micAsk = null, mac = null, an = null, fbuf = null, fake = null, voice = null;
+    const micAllowed = (() => { try { const pp = document.permissionsPolicy || document.featurePolicy; return !pp || pp.allowsFeature('microphone'); } catch (e) { return true; } })();
+    let dict = null;
+    if (!micAllowed && window.claude && window.claude.use) window.claude.use('dictation').then(d => { dict = d; }).catch(() => {});
+    const plain = c => c.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+    let heard = '';
+    function onVoice(text) {
+      const t = plain(text || ''), add = t.startsWith(heard) ? t.slice(heard.length) : t.slice(-6);
+      heard = t;
+      if (!voice) return;
+      for (const ch of add) { voice.level = Math.min(1, voice.level + .25); letters.forEach((L, i) => { if (plain(L.ch) === ch) voice.hit[i] = 1; }); }
+    }
+    function getMic() {
+      if (micStream && micStream.active) { micStream.getAudioTracks().forEach(t => t.enabled = true); if (mac.state === 'suspended') mac.resume(); return Promise.resolve(micStream); }
+      if (!micAsk) micAsk = (async () => {
+        try {
+          if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error('no mic');
+          micStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+          mac = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: 'interactive' });
+          an = mac.createAnalyser(); an.fftSize = 1024; an.smoothingTimeConstant = .2;
+          mac.createMediaStreamSource(micStream).connect(an); fbuf = new Uint8Array(an.frequencyBinCount);
+        } catch (e) { micStream = null; }
+        micAsk = null; return micStream;
+      })();
+      return micAsk;
+    }
+    async function setMic() {
+      if (fx.mic) {
+        fx.mic = false;
+        if (micStream) micStream.getAudioTracks().forEach(t => t.enabled = false);
+        if (voice && dict) dict.stop().catch(() => {});
+        voice = null; fake = null; refresh(); return;
+      }
+      fx.mic = true; refresh();
+      if (!micAllowed && dict) {                        // visor de Claude: su permiso de micrófono (dictado)
+        voice = { level: 0, hit: letters.map(() => 0), t: 0 }; heard = '';
+        if (!dict._wired) {
+          dict._wired = true;
+          dict.onPartial(({ text }) => onVoice(text));
+          dict.onFinal(() => { heard = ''; });
+          dict.onState(({ state }) => { if (state === 'idle' && fx.mic && voice) setMic(); });
+        }
+        dict.start().catch(err => { if (fx.mic) setMic(); toast(String(err && (err.code || err.message || err)).includes('not_granted') ? 'Microphone permission denied' : 'Microphone not available'); });
+        return;
+      }
+      if (!(await getMic())) { fake = { x: .5, level: 0 }; toast('The microphone is blocked in this preview · use the local version (or the mouse)'); }
+    }
+    btn.mic.addEventListener('click', setMic);
+    function micLevels(dt) {
+      const n = baseL.length; if (!letters.length || !n) return;
+      if (an && fx.mic) an.getByteFrequencyData(fbuf);
+      const lo = 90, hi = 6000;
+      letters.forEach((L, i) => {
+        let e = 0;
+        const ci = L.col;
+        if (fx.mic && an && micStream) {
+          const ny = mac.sampleRate / 2, f0 = lo * Math.pow(hi / lo, ci / n), f1 = lo * Math.pow(hi / lo, (ci + 1) / n);
+          const b0 = Math.floor(f0 / ny * fbuf.length), b1 = Math.max(b0 + 1, Math.ceil(f1 / ny * fbuf.length));
+          let sum = 0; for (let b = b0; b < b1; b++) sum += fbuf[b];
+          e = Math.max(0, (sum / (b1 - b0) / 255 - .28) / .72);
+        } else if (fx.mic && voice) {
+          if (voice.hit.length !== letters.length) voice.hit = letters.map(() => 0);
+          const wave = voice.level * (.35 + .35 * Math.sin(voice.t * 9 - ci * .8 + L.ph));
+          e = Math.max(wave, voice.hit[i]); voice.hit[i] *= .9;
+        } else if (fx.mic && fake) {
+          const c = (ci + .5) / n; e = fake.level * Math.exp(-Math.pow((c - fake.x) / .18, 2));
+        }
+        const ts = 1 + Math.min(1, e * 1.4);
+        L.s += (ts - L.s) * (ts > L.s ? .75 : .2);      // crece rápido desde su centro y vuelve despacio
+        if (Math.abs(L.s - 1) < .002) L.s = 1;
+      });
+      if (fake) fake.level *= .9;
+      if (voice) { voice.level *= .94; voice.t += dt; }
+    }
+
+    // ── 4 · ondas ──
+    btn.wave.addEventListener('click', () => { fx.wave = !fx.wave; wLocked = false; if (letters.length) syncLines(); refresh(); });
+    stage.addEventListener('click', e => {
+      if (!fx.wave || tools.contains(e.target)) return;
+      wLocked = !wLocked;                               // bloquea velocidad y líneas: puedes usar el ratón sin cambiar la onda
+      toast(wLocked ? 'Wave locked · the mouse no longer changes it (click to unlock)' : 'Wave follows the mouse again');
+    });
+    function allOff() {
+      fx.cam = fx.fall = fx.mic = fx.wave = false; homing = false; voice = null; fake = null;
+      pauseCam(); if (micStream) micStream.getAudioTracks().forEach(t => t.enabled = false);
+      if (dict) dict.stop().catch(() => {});
+      letters = []; refresh();
+    }
+
+    // ── botón 5 · foto, GIF o vídeo de lo que se ve ──
+    const shotWrap = document.querySelector('.pg-shot-wrap'), shotBtn = document.getElementById('pgShot');
+    let dl = null;
+    if (window.claude && window.claude.use) window.claude.use('downloads').then(d => { dl = d; }).catch(() => {});
+    shotBtn.addEventListener('click', () => shotWrap.classList.toggle('open'));
+    document.addEventListener('pointerdown', e => { if (!shotWrap.contains(e.target) && !busy && !rec) shotWrap.classList.remove('open'); });
+    const active = () => !!letters.length;
+    // pinta el escenario tal y como se ve (fondo blanco, cámara suave si está encendida y las letras)
+    function frameTo(c, W, H) {
+      const k = W / stage.clientWidth;
+      c.setTransform(1, 0, 0, 1, 0, 0); c.fillStyle = '#ffffff'; c.fillRect(0, 0, W, H);
+      if (video.classList.contains('live') && video.readyState >= 2) {
+        const va = video.videoWidth / video.videoHeight, sc = Math.max(W / va, H), vw = sc * va, vh = sc;
+        c.save(); c.globalAlpha = .14; c.filter = 'grayscale(1)'; c.translate(W, 0); c.scale(-1, 1);
+        c.drawImage(video, (W - vw) / 2, (H - vh) / 2, vw, vh); c.restore();
+      }
+      c.setTransform(k, 0, 0, k, 0, 0);
+      if (!active()) { buildLetters(); draw(c, false); letters = []; baseL = []; }
+      else draw(c, false);
+      c.setTransform(1, 0, 0, 1, 0, 0);
+    }
+    const stamp = () => 'erre-erre-playground-' + new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
+    async function save(blob, ext) {
+      const name = stamp() + '.' + ext;
+      if (dl) {
+        try { await dl.save({ filename: name, data: blob }); toast('Saved · ' + name); }
+        catch (e) { if (e && e.code !== 'declined') toast('Could not save the file'); }
+        return;
+      }
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+      document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    }
+    const shotCanvas = (maxW) => {
+      const W0 = stage.clientWidth, H0 = stage.clientHeight - tools.offsetHeight - BL * 3;   // sin la barra de botones
+      const k = Math.min(maxW / W0, devicePixelRatio || 1), c = document.createElement('canvas');
+      c.width = Math.round(W0 * k); c.height = Math.round(H0 * k); return c;
+    };
+    async function photo() {
+      const c = shotCanvas(2400); frameTo(c.getContext('2d'), c.width, c.width / stage.clientWidth * stage.clientHeight);
+      c.toBlob(b => save(b, 'png'), 'image/png');
+    }
+    let busy = false;
+    async function gif(btn) {
+      if (busy) return; busy = true; btn.classList.add('rec');
+      const c = shotCanvas(640), g = c.getContext('2d', { willReadFrequently: true }), H = c.width / stage.clientWidth * stage.clientHeight;
+      const frames = [];
+      const toIx = () => { const d = g.getImageData(0, 0, c.width, c.height).data, ix = new Uint8Array(c.width * c.height); for (let i = 0; i < ix.length; i++) ix[i] = Math.round((d[i * 4] * .3 + d[i * 4 + 1] * .59 + d[i * 4 + 2] * .11) / 17); return ix; };
+      if (fx.wave && wAmp > .5) {
+        // ondas: graba exactamente una vuelta entera de la onda, así el GIF se repite sin cortes
+        const period = 2 * Math.PI / wSpeed, F = Math.max(16, Math.min(90, Math.round(period * 15))), p0 = wPhase;
+        btn.querySelector('.label').textContent = 'REC';
+        await new Promise(r => setTimeout(r, 30));
+        for (let f = 0; f < F; f++) { wPhase = p0 + 2 * Math.PI * f / F; frameTo(g, c.width, H); frames.push(toIx()); }
+        wPhase = p0;
+        btn.querySelector('.label').textContent = 'GIF';
+        await save(new Blob([encodeGIF(frames, c.width, c.height, Math.max(2, Math.round(period * 100 / F)))], { type: 'image/gif' }), 'gif');
+        btn.classList.remove('rec'); busy = false; return;
+      }
+      const N = 30, every = 100;                           // sin ondas: 3 s a 10 fotogramas por segundo
+      for (let f = 0; f < N; f++) {
+        btn.querySelector('.label').textContent = 'REC ' + Math.ceil((N - f) / 10);
+        frameTo(g, c.width, H);
+        const d = g.getImageData(0, 0, c.width, c.height).data, ix = new Uint8Array(c.width * c.height);
+        for (let i = 0; i < ix.length; i++) ix[i] = Math.round((d[i * 4] * .3 + d[i * 4 + 1] * .59 + d[i * 4 + 2] * .11) / 17);
+        frames.push(ix);
+        await new Promise(r => setTimeout(r, every));
+      }
+      btn.querySelector('.label').textContent = 'GIF';
+      await save(new Blob([encodeGIF(frames, c.width, c.height, every / 10)], { type: 'image/gif' }), 'gif');
+      btn.classList.remove('rec'); busy = false;
+    }
+    let rec = null;
+    function video_(btn) {
+      if (rec) { rec.stop(); return; }
+      if (!window.MediaRecorder) { toast('Video is not available in this browser'); return; }
+      const c = shotCanvas(1280), g = c.getContext('2d'), H = c.width / stage.clientWidth * stage.clientHeight;
+      const type = ['video/mp4;codecs=avc1', 'video/mp4', 'video/webm;codecs=vp9', 'video/webm'].find(t => MediaRecorder.isTypeSupported(t)) || '';
+      const ext = type.startsWith('video/mp4') ? 'mp4' : 'webm';
+      const chunks = [], st = c.captureStream(30), r = new MediaRecorder(st, type ? { mimeType: type, videoBitsPerSecond: 6e6 } : undefined);
+      let on = true, t0 = performance.now();
+      const tick = () => { if (!on) return; frameTo(g, c.width, H); btn.querySelector('.label').textContent = 'STOP ' + Math.floor((performance.now() - t0) / 1000) + 's'; if (performance.now() - t0 > 15000) r.stop(); requestAnimationFrame(tick); };
+      r.ondataavailable = e => e.data.size && chunks.push(e.data);
+      r.onstop = () => { on = false; rec = null; btn.classList.remove('rec'); btn.querySelector('.label').textContent = 'VIDEO'; save(new Blob(chunks, { type: type || 'video/webm' }), ext); };
+      rec = r; btn.classList.add('rec'); r.start(200); tick();
+    }
+    shotWrap.querySelectorAll('[data-shot]').forEach(b => b.addEventListener('click', () => {
+      const k = b.dataset.shot;
+      if (k === 'photo') { photo(); shotWrap.classList.remove('open'); } else if (k === 'gif') gif(b).then(() => shotWrap.classList.remove('open')); else video_(b);
+    }));
+    // GIF de 16 grises (codificador propio, sin librerías)
+    function encodeGIF(frames, w, h, delay) {
+      const out = []; const b8 = v => out.push(v & 255), b16 = v => { b8(v); b8(v >> 8); }, str = t => { for (const ch of t) b8(ch.charCodeAt(0)); };
+      str('GIF89a'); b16(w); b16(h); b8(0xF3); b8(0); b8(0);
+      for (let i = 0; i < 16; i++) { const v = Math.round(i * 255 / 15); b8(v); b8(v); b8(v); }
+      b8(0x21); b8(0xFF); b8(11); str('NETSCAPE2.0'); b8(3); b8(1); b16(0); b8(0);   // en bucle
+      for (const px of frames) {
+        b8(0x21); b8(0xF9); b8(4); b8(0); b16(delay); b8(0); b8(0);
+        b8(0x2C); b16(0); b16(0); b16(w); b16(h); b8(0);
+        const min = 4, clear = 1 << min, eoi = clear + 1, bytes = [];
+        let size = min + 1, next = eoi + 1, dict = new Map(), cur = 0, nb = 0;
+        const emit = c => { cur |= c << nb; nb += size; while (nb >= 8) { bytes.push(cur & 255); cur >>>= 8; nb -= 8; } };
+        emit(clear);
+        let prefix = px[0];
+        for (let i = 1; i < px.length; i++) {
+          const k = px[i], key = prefix * 16 + k, hit = dict.get(key);
+          if (hit !== undefined) { prefix = hit; continue; }
+          emit(prefix);
+          if (next === 4096) { emit(clear); dict = new Map(); size = min + 1; next = eoi + 1; }
+          else { if (next >= (1 << size)) size++; dict.set(key, next++); }
+          prefix = k;
+        }
+        emit(prefix); emit(eoi); if (nb > 0) bytes.push(cur & 255);
+        b8(min);
+        for (let i = 0; i < bytes.length; i += 255) { const n = Math.min(255, bytes.length - i); b8(n); for (let j = 0; j < n; j++) out.push(bytes[i + j]); }
+        b8(0);
+      }
+      b8(0x3B);
+      return new Uint8Array(out);
+    }
+
+    return { show: () => init().then(fit), stop: () => { allOff(); if (rec) rec.stop(); } };
+  })();
+  function showPlayground(ms) {
+    cancelIntro();
+    body.classList.remove('is-type', 'is-res', 'is-bld'); body.classList.add('is-pg');
+    document.title = 'PLAYGROUND · ERRE ERRE FOUNDRY';
+    setActive('#playground');
+    measure(); go(1, ms);
+    scrollTo(0, 0);
+    setTimeout(() => PG.show(), Math.max(0, ms) + 30);   // espera a que el menú se pliegue para medir el escenario
+  }
+  function setActive(href) {
+    buttons.querySelectorAll('a').forEach(b => b.classList.toggle('is-active', b.getAttribute('href') === href));
+    buttons.classList.add('has-active');
+  }
+  function showHome() {
+    const wasType = ['is-type', 'is-res', 'is-bld', 'is-pg'].some(c => body.classList.contains(c));
+    body.classList.remove('is-type', 'is-res', 'is-bld', 'is-pg'); PG.stop();
+    document.title = 'ERRE ERRE FOUNDRY';
+    setActive('#catalogue');          // CATALOGUE es la home: siempre marcado aquí
+    measure();
+    if (wasType) { go(1); scrollTo(0, 0); }
+    alignBaselines(); placeSmileys();
+  }
+  function route(ms = 325) {
+    const id = decodeURIComponent(location.hash.slice(1));
+    if (TYPEFACES[id]) { body.classList.remove('is-res', 'is-bld', 'is-pg'); PG.stop(); showType(id, ms); }
+    else if (id === 'builder') showBuilder(ms);
+    else if (id === 'playground') showPlayground(ms);
+    else if (id === 'resources') showResources(ms);
+    else showHome();
+  }
+  addEventListener('hashchange', () => route());
+
+  // Clic en una tarjeta: crece hasta ocupar la pantalla y entra en la tipografía
+  document.addEventListener('click', e => {
+    const card = e.target.closest('.card'); if (!card || card.classList.contains('zoom')) return;
+    e.preventDefault();
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { location.hash = card.dataset.id; return; }
+    const r = card.getBoundingClientRect();
+    const z = card.cloneNode(true);
+    z.classList.add('zoom'); z.removeAttribute('href');
+    Object.assign(z.style, { left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px' });
+    body.appendChild(z);
+    go(0, 500);
+    z.offsetWidth;
+    const W = document.documentElement.clientWidth;
+    Object.assign(z.style, { left: BL + 'px', top: 5 * BL + 'px', width: (W - 2 * BL) + 'px', height: (innerHeight - 6 * BL) + 'px' });
+    z.querySelector('.specimen').style.opacity = 0;
+    setTimeout(() => { location.hash = card.dataset.id; setTimeout(() => z.remove(), 60); }, 520);
+  });
+
+  // Arranque: si llegas con #tipografía entras directo; si no, intro de la home
+  if (TYPEFACES[decodeURIComponent(location.hash.slice(1))] || location.hash === '#resources' || location.hash === '#builder' || location.hash === '#playground') route(0);
+  else document.fonts.ready.then(playIntro);
+  document.fonts.ready.then(() => { alignBaselines(); placeSmileys(); }); placeSmileys();
+  // se recolocan si cambia el ancho (también cuando aparece la barra de scroll)
+  new ResizeObserver(placeSmileys).observe(wrap);
+  addEventListener('resize', () => {
+    alignBaselines(); placeSmileys(); if (body.classList.contains('is-type')) fitHero();
+    const name = states[current].name;
+    measure();
+    current = Math.max(0, states.findIndex(s => s.name === name));
+    cancelAnimationFrame(anim); render(states[current].lines);
+  });
+})();
+</script>
+<script src="assets/js/sound.js"></script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+/* ERRE ERRE FOUNDRY · sistema base
+   Retícula: 12 columnas · márgenes y medianil = 1 línea base (10,186 px)
+   Los módulos pueden cambiar de ANCHO (responsive) pero su ALTO siempre es
+   un múltiplo de la línea base: --h:5 · 11 · 23 · 47 (y 3 para las barras). */
+
+@font-face {
+  font-family: 'Oswald';
+  src: url('../fonts/Oswald-Variable.ttf') format('truetype');
+  font-weight: 200 700;
+  font-display: swap;
+}
+
+:root {
+  --bl: 10.186px;              /* línea base */
+  --gut: var(--bl);            /* medianil */
+  --ink: #231f20;
+  --c12: #e5e4e4;              /* negro 12 % */
+  --c30: #bdbcbc;              /* negro 30 % */
+  --dim: #b3b2b2;              /* texto apagado */
+  --paper: #fff;
+  --bevel: 6px;                /* esquinas biseladas */
+  --screw: 1.7px;              /* radio del tornillo */
+  --screw-in: 6px;             /* distancia del tornillo a la esquina */
+  --ease: cubic-bezier(.65, 0, .25, 1);
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: 'Oswald', 'Arial Narrow', sans-serif; font-weight: 400;
+  font-size: 12.573px; line-height: 20.37px; letter-spacing: -0.025em;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+button, input, select, textarea { font: inherit; color: inherit; letter-spacing: inherit; }
+button { background: none; border: 0; padding: 0; cursor: pointer; }
+img { display: block; max-width: 100%; }
+::selection { background: var(--ink); color: var(--paper); }
+
+/* ───────── Estilos de texto (de la página 1 del INDD) ───────── */
+.t1 { font-size: 12.573px; line-height: 20.37px; letter-spacing: -0.025em; }
+.t2 { font-size: 25.147px; line-height: 30.558px; letter-spacing: -0.025em; }
+.t3 { font-size: 50.285px; line-height: 50.93px; letter-spacing: -0.025em; }
+.up { text-transform: uppercase; }
+.lbl { font-size: 8px; line-height: 1; letter-spacing: 0; text-transform: uppercase; }
+
+/* ───────── Página y retícula ───────── */
+.page { padding: var(--bl); display: flex; flex-direction: column; gap: var(--bl); }
+.g {
+  display: grid; grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gut); row-gap: var(--bl); align-items: start;
+}
+.g > * { grid-column: span var(--s, 12); min-width: 0; }
+.g.half { grid-template-columns: repeat(24, minmax(0, 1fr)); }   /* para módulos de media columna */
+.stack { display: flex; flex-direction: column; gap: var(--bl); min-width: 0; }
+
+@media (max-width: 1000px) {
+  .g > * { grid-column: span var(--md, var(--s, 12)); }
+}
+@media (max-width: 640px) {
+  .g > * { grid-column: span var(--sm, var(--md, 12)); }
+  .t3 { font-size: 40.74px; line-height: 40.74px; }
+}
+
+/* ───────── Módulo (caja) ───────── */
+.m {
+  --bg: var(--c12);
+  position: relative; min-width: 0;
+  height: calc(var(--h, 5) * var(--bl));
+  background:
+    radial-gradient(circle at var(--screw-in) var(--screw-in), var(--sc, var(--ink)) var(--screw), transparent calc(var(--screw) + .6px)),
+    radial-gradient(circle at calc(100% - var(--screw-in)) var(--screw-in), var(--sc, var(--ink)) var(--screw), transparent calc(var(--screw) + .6px)),
+    radial-gradient(circle at var(--screw-in) calc(100% - var(--screw-in)), var(--sc, var(--ink)) var(--screw), transparent calc(var(--screw) + .6px)),
+    radial-gradient(circle at calc(100% - var(--screw-in)) calc(100% - var(--screw-in)), var(--sc, var(--ink)) var(--screw), transparent calc(var(--screw) + .6px)),
+    var(--bg);
+  clip-path: polygon(var(--bevel) 0, calc(100% - var(--bevel)) 0, 100% var(--bevel), 100% calc(100% - var(--bevel)),
+                     calc(100% - var(--bevel)) 100%, var(--bevel) 100%, 0 calc(100% - var(--bevel)), 0 var(--bevel));
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  overflow: hidden;
+  transition: background-color .2s, color .2s;
+}
+.m.ghost { --bg: transparent; }
+.m.on, .m.dark { --bg: var(--c30); }
+.m.auto { height: auto; min-height: calc(var(--h, 5) * var(--bl)); }
+a.m:hover, button.m:hover, .m.hov:hover { --bg: #d6d5d5; }
+a.m.on:hover, button.m.on:hover { --bg: var(--c30); }
+.m.dim { color: var(--dim); }
+.m.dim:hover { color: var(--ink); }
+.m.fill > * { width: 100%; height: 100%; }
+
+/* barra separadora con título (INFO, THIN, GLYPHS…) */
+.bar { --h: 3; --bg: var(--c30); color: var(--ink); }
+.bar .lbl { pointer-events: none; }
+
+/* ───────── Cabecera: logo + menú + barra de arrastre ───────── */
+.top { padding: var(--bl); padding-bottom: 0; position: relative; z-index: 20; }
+.top + .page, .top + main { padding-top: var(--bl); }
+.top .logo-wrap { overflow: hidden; height: 0; transition: height .7s var(--ease), margin .7s var(--ease); }
+.top .logo { display: block; width: 100%; }
+.top .nav { overflow: hidden; height: 0; transition: height .7s var(--ease), margin .7s var(--ease); }
+.top .nav .m { height: 100%; transition: height .7s var(--ease), background-color .2s, color .2s; }
+.top .nav .g { height: 100%; }
+.top .nav .m span { pointer-events: none; }
+.top .handle { cursor: ns-resize; touch-action: none; user-select: none; }
+.top .handle svg { width: 17px; height: 11px; transition: opacity .2s; }
+.top[data-state="0"] .handle svg, .top[data-state="1"] .handle svg { opacity: .55; }
+.top .handle:hover svg { opacity: 1; }
+.top.dragging * { transition: none !important; }
+.top .logo-wrap.on { margin-bottom: var(--bl); }
+.top .nav.on { margin-bottom: var(--bl); }
+.top.sticky { position: sticky; top: 0; background: var(--paper); padding-bottom: var(--bl); }
+
+/* ───────── Overlay de retícula al arrastrar módulos ───────── */
+.rr-grid-overlay {
+  position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: 0; transition: opacity .25s;
+  background-image: radial-gradient(circle, rgba(35,31,32,.35) 1.1px, transparent 1.6px);
+  background-size: calc(var(--bl) * 3) calc(var(--bl) * 3);
+  background-position: calc(var(--bl) * -1.5 + var(--ox, 0px)) calc(var(--bl) * -1.5 + var(--oy, 0px));
+}
+.rr-grid-overlay.on { opacity: 1; }
+.rr-grid-overlay .cols { position: absolute; inset: 0 var(--bl); display: grid; grid-template-columns: repeat(12, 1fr); column-gap: var(--gut); }
+.rr-grid-overlay .cols i { background: rgba(255, 144, 247, .035); border-left: 1px solid rgba(160, 90, 255, .35); border-right: 1px solid rgba(160, 90, 255, .35); }
+.rr-drag-ghost { position: fixed; z-index: 60; pointer-events: none; opacity: .92; transform-origin: 0 0; transition: transform .12s; filter: drop-shadow(0 12px 18px rgba(0,0,0,.18)); }
+.rr-slot { outline: 1.5px dashed var(--ink); outline-offset: -1.5px; background: transparent !important; clip-path: none !important; }
+.rr-slot > * { visibility: hidden; }
+.rr-draggable { cursor: grab; }
+body.rr-dragging, body.rr-dragging * { cursor: grabbing !important; user-select: none !important; }
+
+/* ───────── Tarjetas del catálogo ───────── */
+.card { --h: 47; container-type: inline-size; color: var(--ink); }
+.card .spec { font-size: min(330px, 54cqw); line-height: 1; white-space: nowrap; transition: transform .5s var(--ease); }
+.card .meta { position: absolute; left: 0; right: 0; bottom: calc(var(--bl) * 2); opacity: 0; transform: translateY(6px); transition: .3s var(--ease); }
+.card:hover .meta { opacity: 1; transform: none; }
+.card:hover .spec { transform: scale(1.04); }
+
+.card.add { color: var(--dim); }
+.card.add .spec { font-size: min(200px, 30cqw); }
+.card.add:hover { color: var(--ink); }
+
+/* ───────── Pie ───────── */
+.foot .big { --h: 25; container-type: inline-size; }
+.foot .big span { font-size: min(232px, 118cqw); line-height: 1; transform: translateY(4%); }
+.foot .small { --h: 12; }
+
+/* ───────── utilidades ───────── */
+.center { display: flex; align-items: center; justify-content: center; }
+.pad { padding: calc(var(--bl) * 2); }
+.hide { display: none !important; }
+.arrow { display: inline-block; width: .62em; height: .62em; vertical-align: .02em; }
+.toast {
+  position: fixed; left: 50%; bottom: calc(var(--bl) * 3); transform: translate(-50%, 20px); opacity: 0; z-index: 100;
+  background: var(--ink); color: var(--paper); padding: 6px 16px; pointer-events: none; transition: .25s var(--ease);
+  clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px), 0 6px);
+}
+.toast.on { opacity: 1; transform: translate(-50%, 0); }
+
+/* ───────── Intro de la home ───────── */
+.intro { position: fixed; inset: 0; z-index: 90; background: var(--paper); display: flex; align-items: center; justify-content: center; padding: var(--bl); transition: background-color .5s; }
+.intro canvas { width: 100%; height: 100%; }
+.intro.out { background: transparent; pointer-events: none; }
+.pop { animation: pop .55s var(--ease) both; }
+@keyframes pop { from { opacity: 0; transform: translateY(14px) scale(.97); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
