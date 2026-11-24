@@ -68,9 +68,16 @@
     if (!inBuilder && from !== 'frame') { const f = document.getElementById('bldFrame'); if (f && f.contentWindow) f.contentWindow.postMessage({ rrSound: on }, '*'); }
     if (on && from === 'click') chord(1.2);
   }
-  // el audio arranca con el primer clic o tecla (antes el navegador lo bloquea)
+  // El audio intenta arrancar nada más entrar. Si el navegador lo bloquea (lo normal hasta que tocas la página),
+  // arranca con lo primero que hagas: clic, tecla, toque… y lo intenta también al mover el ratón o hacer scroll.
   const unlock = () => { try { ctx(); } catch (e) {} };
-  ['pointerdown', 'keydown', 'touchstart'].forEach(ev => window.addEventListener(ev, unlock, { capture: true, passive: true }));
+  try { ctx(); } catch (e) {}
+  ['pointerdown', 'pointerup', 'mousedown', 'click', 'keydown', 'touchstart', 'touchend', 'mousemove', 'wheel', 'scroll']
+    .forEach(ev => window.addEventListener(ev, unlock, { capture: true, passive: true }));
+  // si la intro no pudo sonar porque el audio seguía bloqueado, suena en cuanto se desbloquea (los primeros segundos)
+  let pendingIntro = false;
+  const t0 = performance.now();
+  if (ac) ac.addEventListener('statechange', () => { if (ac.state === 'running' && pendingIntro && performance.now() - t0 < 12000) { pendingIntro = false; chord(.8); } });
 
   // ───────── 6 · Intro: acorde que se pliega con el menú ─────────
   function chord(sec = .8) {
@@ -161,7 +168,7 @@
   const h0 = startH();
   const iv = setInterval(() => {
     if (introDone) return clearInterval(iv);
-    if (startH() < h0 - BL * 4) { introDone = true; clearInterval(iv); if (ready()) chord(.8); }
+    if (startH() < h0 - BL * 4) { introDone = true; clearInterval(iv); if (ac && ac.state === 'running') chord(.8); else pendingIntro = true; }
   }, 60);
   setTimeout(() => clearInterval(iv), 6000);
 
